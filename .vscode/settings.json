@@ -4,5 +4,5 @@
   },
   "editor.formatOnSave": true,
   "editor.defaultFormatter": "esbenp.prettier-vscode",
-  "cSpell.words": ["qrcode", "xiangheng"]
+  "cSpell.words": ["pixelsize", "qrcode", "xiangheng"]
 }

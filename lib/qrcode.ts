@@ -23,7 +23,7 @@ export class XHQRCode extends LitElement {
    * 二维码像素大小
    */
   @property({ type: Number })
-  pixelSize = 4
+  pixelsize = 4
 
   /**
    * 二维码像素颜色
@@ -49,9 +49,9 @@ export class XHQRCode extends LitElement {
     if (
       changedProperties.has('value') ||
       changedProperties.has('version') ||
-      changedProperties.has('pixelSize') ||
+      changedProperties.has('pixelsize') ||
       changedProperties.has('color') ||
-      changedProperties.has('colorLight')
+      changedProperties.has('background')
     ) {
       this.__drawQRCode()
     }
@@ -69,7 +69,7 @@ export class XHQRCode extends LitElement {
       if (!canvas) return
 
       const size = matrixData.length
-      const canvasSize = size * this.pixelSize
+      const canvasSize = size * this.pixelsize
 
       // 设置canvas尺寸
       canvas.width = canvasSize
@@ -88,7 +88,7 @@ export class XHQRCode extends LitElement {
       for (let row = 0; row < size; row++) {
         for (let col = 0; col < size; col++) {
           if (matrixData[row][col]) {
-            ctx.fillRect(col * this.pixelSize, row * this.pixelSize, this.pixelSize, this.pixelSize)
+            ctx.fillRect(col * this.pixelsize, row * this.pixelsize, this.pixelsize, this.pixelsize)
           }
         }
       }
