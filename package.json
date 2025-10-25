@@ -1,17 +1,46 @@
 {
-  "name": "xh-qrcode",
-  "private": true,
+  "name": "@xiangheng08/qrcode",
   "version": "0.0.0",
+  "author": "xiangheng08",
+  "license": "MIT",
+  "keywords": [
+    "qrcode",
+    "xiangheng08",
+    "xiangheng08/qrcode",
+    "@xiangheng08/qrcode"
+  ],
+  "homepage": "https://github.com/xiangheng08/xh-qrcode",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/xiangheng08/xh-qrcode"
+  },
+  "bugs": {
+    "url": "https://github.com/xiangheng08/xh-qrcode/issues"
+  },
   "type": "module",
+  "files": [
+    "dist"
+  ],
+  "main": "./dist/xh-qrcode.umd.cjs",
+  "module": "./dist/xh-qrcode.js",
+  "exports": {
+    ".": {
+      "import": "./dist/xh-qrcode.js",
+      "require": "./dist/xh-qrcode.umd.cjs"
+    }
+  },
   "scripts": {
     "dev": "vite",
     "build": "tsc && vite build",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "type-check": "tsc --noEmit",
+    "format": "prettier --w lib/ --w src/"
   },
   "dependencies": {
     "lit": "^3.3.1"
   },
   "devDependencies": {
+    "prettier": "^3.6.2",
     "typescript": "~5.9.3",
     "vite": "^7.1.7"
   }

@@ -1,7 +1,7 @@
 import { LitElement, css, html } from 'lit'
 import { customElement, property } from 'lit/decorators.js'
-import litLogo from './assets/lit.svg'
-import viteLogo from '/vite.svg'
+import litLogo from '../src/assets/lit.svg'
+import viteLogo from '../src/assets/vite.svg'
 
 /**
  * An example element.
@@ -35,9 +35,7 @@ export class MyElement extends LitElement {
       </div>
       <slot></slot>
       <div class="card">
-        <button @click=${this._onClick} part="button">
-          count is ${this.count}
-        </button>
+        <button @click=${this._onClick} part="button">count is ${this.count}</button>
       </div>
       <p class="read-the-docs">${this.docsHint}</p>
     `
