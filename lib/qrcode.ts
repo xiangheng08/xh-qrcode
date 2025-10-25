@@ -1,125 +1,116 @@
 import { LitElement, css, html } from 'lit'
 import { customElement, property } from 'lit/decorators.js'
-import litLogo from '../src/assets/lit.svg'
-import viteLogo from '../src/assets/vite.svg'
+import { generateQRMatrix, getMatrixData } from './qrcode-algorithm'
 
 /**
- * An example element.
- *
- * @slot - This element has a slot
- * @csspart button - The button
+ * a simple qrcode component
  */
-@customElement('my-element')
-export class MyElement extends LitElement {
+@customElement('xh-qrcode')
+export class XHQRCode extends LitElement {
   /**
-   * Copy for the read the docs hint.
+   * 二维码内容
    */
   @property()
-  docsHint = 'Click on the Vite and Lit logos to learn more'
+  value = ''
 
   /**
-   * The number of times the button has been clicked.
+   * 二维码版本 (1-40)
    */
   @property({ type: Number })
-  count = 0
+  version = 1
+
+  /**
+   * 二维码像素大小
+   */
+  @property({ type: Number })
+  pixelSize = 4
+
+  /**
+   * 二维码像素颜色
+   */
+  @property()
+  color = '#000000'
+
+  /**
+   * 背景色
+   */
+  @property()
+  background = '#ffffff'
 
   render() {
-    return html`
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src=${viteLogo} class="logo" alt="Vite logo" />
-        </a>
-        <a href="https://lit.dev" target="_blank">
-          <img src=${litLogo} class="logo lit" alt="Lit logo" />
-        </a>
-      </div>
-      <slot></slot>
-      <div class="card">
-        <button @click=${this._onClick} part="button">count is ${this.count}</button>
-      </div>
-      <p class="read-the-docs">${this.docsHint}</p>
-    `
+    return html`<canvas></canvas>`
   }
 
-  private _onClick() {
-    this.count++
+  firstUpdated() {
+    this.__drawQRCode()
+  }
+
+  updated(changedProperties: Map<string, unknown>) {
+    if (
+      changedProperties.has('value') ||
+      changedProperties.has('version') ||
+      changedProperties.has('pixelSize') ||
+      changedProperties.has('color') ||
+      changedProperties.has('colorLight')
+    ) {
+      this.__drawQRCode()
+    }
+  }
+
+  private __drawQRCode() {
+    try {
+      // 生成二维码矩阵
+      const matrix = generateQRMatrix(this.value, this.version)
+
+      const matrixData = getMatrixData(matrix)
+
+      // 获取canvas元素
+      const canvas = this.renderRoot?.querySelector('canvas') as HTMLCanvasElement
+      if (!canvas) return
+
+      const size = matrixData.length
+      const canvasSize = size * this.pixelSize
+
+      // 设置canvas尺寸
+      canvas.width = canvasSize
+      canvas.height = canvasSize
+
+      // 获取2D上下文
+      const ctx = canvas.getContext('2d')
+      if (!ctx) return
+
+      // 绘制背景
+      ctx.fillStyle = this.background
+      ctx.fillRect(0, 0, canvasSize, canvasSize)
+
+      // 绘制二维码
+      ctx.fillStyle = this.color
+      for (let row = 0; row < size; row++) {
+        for (let col = 0; col < size; col++) {
+          if (matrixData[row][col]) {
+            ctx.fillRect(col * this.pixelSize, row * this.pixelSize, this.pixelSize, this.pixelSize)
+          }
+        }
+      }
+    } catch (error) {
+      console.error('Error generating QR code:', error)
+    }
   }
 
   static styles = css`
     :host {
-      max-width: 1280px;
-      margin: 0 auto;
-      padding: 2rem;
-      text-align: center;
+      display: block;
     }
 
-    .logo {
-      height: 6em;
-      padding: 1.5em;
-      will-change: filter;
-      transition: filter 300ms;
-    }
-    .logo:hover {
-      filter: drop-shadow(0 0 2em #646cffaa);
-    }
-    .logo.lit:hover {
-      filter: drop-shadow(0 0 2em #325cffaa);
-    }
-
-    .card {
-      padding: 2em;
-    }
-
-    .read-the-docs {
-      color: #888;
-    }
-
-    ::slotted(h1) {
-      font-size: 3.2em;
-      line-height: 1.1;
-    }
-
-    a {
-      font-weight: 500;
-      color: #646cff;
-      text-decoration: inherit;
-    }
-    a:hover {
-      color: #535bf2;
-    }
-
-    button {
-      border-radius: 8px;
-      border: 1px solid transparent;
-      padding: 0.6em 1.2em;
-      font-size: 1em;
-      font-weight: 500;
-      font-family: inherit;
-      background-color: #1a1a1a;
-      cursor: pointer;
-      transition: border-color 0.25s;
-    }
-    button:hover {
-      border-color: #646cff;
-    }
-    button:focus,
-    button:focus-visible {
-      outline: 4px auto -webkit-focus-ring-color;
-    }
-
-    @media (prefers-color-scheme: light) {
-      a:hover {
-        color: #747bff;
-      }
-      button {
-        background-color: #f9f9f9;
-      }
+    canvas {
+      image-rendering: pixelated;
+      display: block;
     }
   `
 }
 
 declare global {
   interface HTMLElementTagNameMap {
-    'my-element': MyElement
+    'xh-qrcode': XHQRCode
   }
 }
