@@ -1,12 +1,17 @@
 import { LitElement, css, html } from 'lit'
 import { customElement, property } from 'lit/decorators.js'
-import { generateQRMatrix, getMatrixData } from './qrcode-algorithm'
+import {
+  generateQRMatrix,
+  getMatrixData,
+  getErrorCorrectionLevel,
+  ErrorCorrectionLevel,
+} from './qrcode-algorithm'
 
 /**
  * a simple qrcode component
  */
 @customElement('xh-qrcode')
-export class XHQRCode extends LitElement {
+export class XHQRCodeElement extends LitElement {
   /**
    * 二维码内容
    */
@@ -18,6 +23,12 @@ export class XHQRCode extends LitElement {
    */
   @property({ type: Number })
   version = 1
+
+  /**
+   * 纠错码级别 (L, M, Q, H)
+   */
+  @property()
+  errorcorrectionlevel = 'M'
 
   /**
    * 二维码像素大小
@@ -49,6 +60,7 @@ export class XHQRCode extends LitElement {
     if (
       changedProperties.has('value') ||
       changedProperties.has('version') ||
+      changedProperties.has('errorcorrectionlevel') ||
       changedProperties.has('pixelsize') ||
       changedProperties.has('color') ||
       changedProperties.has('background')
@@ -60,7 +72,8 @@ export class XHQRCode extends LitElement {
   private __drawQRCode() {
     try {
       // 生成二维码矩阵
-      const matrix = generateQRMatrix(this.value, this.version)
+      const ecLevel = getErrorCorrectionLevel(this.errorcorrectionlevel, ErrorCorrectionLevel.M)
+      const matrix = generateQRMatrix(this.value, this.version, ecLevel)
 
       const matrixData = getMatrixData(matrix)
 
@@ -111,6 +124,6 @@ export class XHQRCode extends LitElement {
 
 declare global {
   interface HTMLElementTagNameMap {
-    'xh-qrcode': XHQRCode
+    'xh-qrcode': XHQRCodeElement
   }
 }
