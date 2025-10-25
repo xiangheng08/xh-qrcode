@@ -28,7 +28,7 @@ export class XHQRCodeElement extends LitElement {
    * 纠错码级别 (L, M, Q, H)
    */
   @property()
-  errorcorrectionlevel = 'M'
+  errorcorrectionlevel = 'L'
 
   /**
    * 二维码像素大小
@@ -48,6 +48,12 @@ export class XHQRCodeElement extends LitElement {
   @property()
   background = '#ffffff'
 
+  /**
+   * 内边距
+   */
+  @property({ type: Number })
+  padding = 32
+
   render() {
     return html`<canvas></canvas>`
   }
@@ -63,7 +69,8 @@ export class XHQRCodeElement extends LitElement {
       changedProperties.has('errorcorrectionlevel') ||
       changedProperties.has('pixelsize') ||
       changedProperties.has('color') ||
-      changedProperties.has('background')
+      changedProperties.has('background') ||
+      changedProperties.has('padding')
     ) {
       this.__drawQRCode()
     }
@@ -82,7 +89,7 @@ export class XHQRCodeElement extends LitElement {
       if (!canvas) return
 
       const size = matrixData.length
-      const canvasSize = size * this.pixelsize
+      const canvasSize = size * this.pixelsize + this.padding * 2
 
       // 设置canvas尺寸
       canvas.width = canvasSize
@@ -101,7 +108,12 @@ export class XHQRCodeElement extends LitElement {
       for (let row = 0; row < size; row++) {
         for (let col = 0; col < size; col++) {
           if (matrixData[row][col]) {
-            ctx.fillRect(col * this.pixelsize, row * this.pixelsize, this.pixelsize, this.pixelsize)
+            ctx.fillRect(
+              col * this.pixelsize + this.padding,
+              row * this.pixelsize + this.padding,
+              this.pixelsize,
+              this.pixelsize,
+            )
           }
         }
       }
