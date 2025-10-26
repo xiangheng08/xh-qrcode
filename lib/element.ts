@@ -49,6 +49,10 @@ export class XHQRCodeElement extends LitElement {
   @property({ type: Number })
   padding?: number
 
+  private __canvas?: HTMLCanvasElement
+
+  private __ctx: CanvasRenderingContext2D | null = null
+
   render() {
     return html`<canvas></canvas>`
   }
@@ -71,6 +75,34 @@ export class XHQRCodeElement extends LitElement {
     }
   }
 
+  private __setupCanvas(canvasSize: number) {
+    let canvas = this.__canvas
+    let ctx = this.__ctx
+
+    if (!canvas) {
+      canvas = this.renderRoot?.querySelector('canvas') as HTMLCanvasElement
+      if (!canvas) {
+        throw new Error('Failed to find canvas element')
+      }
+      this.__canvas = canvas
+    }
+
+    if (!ctx) {
+      ctx = canvas.getContext('2d')
+      if (!ctx) {
+        throw new Error('Failed to get 2D context')
+      }
+      this.__ctx = ctx
+    }
+
+    canvas.width = canvasSize
+    canvas.height = canvasSize
+
+    ctx.clearRect(0, 0, canvasSize, canvasSize)
+
+    return { canvas, ctx }
+  }
+
   private __drawQRCode() {
     try {
       const symbol = QRCode.create(this.value, {
@@ -78,35 +110,28 @@ export class XHQRCodeElement extends LitElement {
         version: this.version,
       })
 
-      // 获取canvas元素
-      const canvas = this.renderRoot?.querySelector('canvas') as HTMLCanvasElement
-      if (!canvas) return
-
       const size = symbol.modules.size
-      const pixelsize = this.pixelsize
-      const padding = this.padding || pixelsize * 4
+      const dpr = window.devicePixelRatio || 1
+      const pixelsize = this.pixelsize * dpr
+      const padding = (this.padding || pixelsize * 3) * dpr
       const canvasSize = size * pixelsize + padding * 2
 
-      // 设置canvas尺寸
-      canvas.width = canvasSize
-      canvas.height = canvasSize
+      const { ctx } = this.__setupCanvas(canvasSize)
 
-      // 获取2D上下文
-      const ctx = canvas.getContext('2d')
-      if (!ctx) return
+      ctx.clearRect(0, 0, canvasSize, canvasSize)
 
       // 绘制背景
       ctx.fillStyle = this.background
       ctx.fillRect(0, 0, canvasSize, canvasSize)
-
-      symbol.modules.data
 
       // 绘制二维码
       ctx.fillStyle = this.color
       for (let row = 0; row < size; row++) {
         for (let col = 0; col < size; col++) {
           if (symbol.modules.get(row, col)) {
-            ctx.fillRect(col * pixelsize + padding, row * pixelsize + padding, pixelsize, pixelsize)
+            const x = col * pixelsize + padding
+            const y = row * pixelsize + padding
+            ctx.fillRect(x, y, pixelsize, pixelsize)
           }
         }
       }
