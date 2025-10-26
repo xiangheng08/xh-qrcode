@@ -4,5 +4,5 @@
   },
   "editor.formatOnSave": true,
   "editor.defaultFormatter": "esbenp.prettier-vscode",
-  "cSpell.words": ["errorcorrectionlevel", "pixelsize", "qrcode", "xiangheng"]
+  "cSpell.words": ["dijkstrajs", "errorcorrectionlevel", "pixelsize", "qrcode", "xiangheng"]
 }

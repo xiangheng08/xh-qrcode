@@ -37,10 +37,12 @@
     "format": "prettier --w lib/ --w src/"
   },
   "dependencies": {
+    "dijkstrajs": "^1.0.3",
     "lit": "^3.3.1"
   },
   "devDependencies": {
     "prettier": "^3.6.2",
+    "tsx": "^4.20.6",
     "typescript": "~5.9.3",
     "vite": "^7.1.7"
   }
