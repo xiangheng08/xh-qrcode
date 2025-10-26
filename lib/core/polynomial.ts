@@ -1,4 +1,4 @@
-import * as GF from './galois-field'
+import * as GF from './galois-field';
 
 /**
  * 在伽罗瓦域中将两个多项式相乘
@@ -8,15 +8,15 @@ import * as GF from './galois-field'
  * @return    p1和p2的乘积
  */
 export function mul(p1: Uint8Array, p2: Uint8Array): Uint8Array {
-  const coeff = new Uint8Array(p1.length + p2.length - 1)
+  const coeff = new Uint8Array(p1.length + p2.length - 1);
 
   for (let i = 0; i < p1.length; i++) {
     for (let j = 0; j < p2.length; j++) {
-      coeff[i + j] ^= GF.mul(p1[i], p2[j])
+      coeff[i + j] ^= GF.mul(p1[i], p2[j]);
     }
   }
 
-  return coeff
+  return coeff;
 }
 
 /**
@@ -27,22 +27,22 @@ export function mul(p1: Uint8Array, p2: Uint8Array): Uint8Array {
  * @return          余数
  */
 export function mod(divident: Uint8Array, divisor: Uint8Array): Uint8Array {
-  let result = new Uint8Array(divident)
+  let result = new Uint8Array(divident);
 
-  while (result.length - divisor.length >= 0) {
-    const coeff = result[0]
+  while ((result.length - divisor.length) >= 0) {
+    const coeff = result[0];
 
     for (let i = 0; i < divisor.length; i++) {
-      result[i] ^= GF.mul(divisor[i], coeff)
+      result[i] ^= GF.mul(divisor[i], coeff);
     }
 
     // 从缓冲区头部移除所有零
-    let offset = 0
-    while (offset < result.length && result[offset] === 0) offset++
-    result = result.slice(offset)
+    let offset = 0;
+    while (offset < result.length && result[offset] === 0) offset++;
+    result = result.slice(offset);
   }
 
-  return result
+  return result;
 }
 
 /**
@@ -53,10 +53,10 @@ export function mod(divident: Uint8Array, divisor: Uint8Array): Uint8Array {
  * @return        包含多项式系数的缓冲区
  */
 export function generateECPolynomial(degree: number): Uint8Array {
-  let poly = new Uint8Array([1])
+  let poly = new Uint8Array([1]);
   for (let i = 0; i < degree; i++) {
-    poly = mul(poly, new Uint8Array([1, GF.exp(i)])) as Uint8Array<ArrayBuffer>
+    poly = mul(poly, new Uint8Array([1, GF.exp(i)]));
   }
 
-  return poly
+  return poly;
 }

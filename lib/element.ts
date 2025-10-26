@@ -1,11 +1,6 @@
 import { LitElement, css, html } from 'lit'
 import { customElement, property } from 'lit/decorators.js'
-import {
-  generateQRMatrix,
-  getMatrixData,
-  getErrorCorrectionLevel,
-  ErrorCorrectionLevel,
-} from './qrcode-algorithm'
+import * as QRCode from './core/qrcode'
 
 /**
  * a simple qrcode component
@@ -22,13 +17,13 @@ export class XHQRCodeElement extends LitElement {
    * 二维码版本 (1-40)
    */
   @property({ type: Number })
-  version = 1
+  version?: number
 
   /**
    * 纠错码级别 (L, M, Q, H)
    */
   @property()
-  errorcorrectionlevel = 'L'
+  errorcorrectionlevel = 'M'
 
   /**
    * 二维码像素大小
@@ -52,7 +47,7 @@ export class XHQRCodeElement extends LitElement {
    * 内边距
    */
   @property({ type: Number })
-  padding = 32
+  padding?: number
 
   render() {
     return html`<canvas></canvas>`
@@ -78,18 +73,19 @@ export class XHQRCodeElement extends LitElement {
 
   private __drawQRCode() {
     try {
-      // 生成二维码矩阵
-      const ecLevel = getErrorCorrectionLevel(this.errorcorrectionlevel, ErrorCorrectionLevel.M)
-      const matrix = generateQRMatrix(this.value, this.version, ecLevel)
-
-      const matrixData = getMatrixData(matrix)
+      const symbol = QRCode.create(this.value, {
+        errorCorrectionLevel: this.errorcorrectionlevel,
+        version: this.version,
+      })
 
       // 获取canvas元素
       const canvas = this.renderRoot?.querySelector('canvas') as HTMLCanvasElement
       if (!canvas) return
 
-      const size = matrixData.length
-      const canvasSize = size * this.pixelsize + this.padding * 2
+      const size = symbol.modules.size
+      const pixelsize = this.pixelsize
+      const padding = this.padding || pixelsize * 4
+      const canvasSize = size * pixelsize + padding * 2
 
       // 设置canvas尺寸
       canvas.width = canvasSize
@@ -103,17 +99,14 @@ export class XHQRCodeElement extends LitElement {
       ctx.fillStyle = this.background
       ctx.fillRect(0, 0, canvasSize, canvasSize)
 
+      symbol.modules.data
+
       // 绘制二维码
       ctx.fillStyle = this.color
       for (let row = 0; row < size; row++) {
         for (let col = 0; col < size; col++) {
-          if (matrixData[row][col]) {
-            ctx.fillRect(
-              col * this.pixelsize + this.padding,
-              row * this.pixelsize + this.padding,
-              this.pixelsize,
-              this.pixelsize,
-            )
+          if (symbol.modules.get(row, col)) {
+            ctx.fillRect(col * pixelsize + padding, row * pixelsize + padding, pixelsize, pixelsize)
           }
         }
       }
