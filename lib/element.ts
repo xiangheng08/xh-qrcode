@@ -75,7 +75,7 @@ export class XHQRCodeElement extends LitElement {
     }
   }
 
-  private __setupCanvas(canvasSize: number) {
+  private __setupCanvas() {
     let canvas = this.__canvas
     let ctx = this.__ctx
 
@@ -95,11 +95,6 @@ export class XHQRCodeElement extends LitElement {
       this.__ctx = ctx
     }
 
-    canvas.width = canvasSize
-    canvas.height = canvasSize
-
-    ctx.clearRect(0, 0, canvasSize, canvasSize)
-
     return { canvas, ctx }
   }
 
@@ -115,8 +110,14 @@ export class XHQRCodeElement extends LitElement {
       const pixelsize = this.pixelsize * dpr
       const padding = (this.padding || pixelsize * 3) * dpr
       const canvasSize = size * pixelsize + padding * 2
+      const canvasDisplaySize = canvasSize / dpr
 
-      const { ctx } = this.__setupCanvas(canvasSize)
+      const { canvas, ctx } = this.__setupCanvas()
+
+      canvas.width = canvasSize
+      canvas.height = canvasSize
+      canvas.style.width = canvasDisplaySize + 'px'
+      canvas.style.height = canvasDisplaySize + 'px'
 
       ctx.clearRect(0, 0, canvasSize, canvasSize)
 
