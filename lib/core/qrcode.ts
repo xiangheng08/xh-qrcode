@@ -13,7 +13,7 @@ import * as Mode from './mode'
 import * as Segments from './segments'
 import type { ErrorCorrectionLevel } from './error-correction-level'
 
-interface QRCodeSymbol {
+export interface QRCodeSymbol {
   modules: BitMatrix
   version: number
   errorCorrectionLevel: ErrorCorrectionLevel
