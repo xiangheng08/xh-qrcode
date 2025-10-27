@@ -14,4 +14,5 @@ export interface QRCodeArea {
   x: number
   y: number
   s: number
+  pixelsize: number
 }

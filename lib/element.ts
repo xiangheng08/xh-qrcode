@@ -134,6 +134,9 @@ export class XHQRCodeElement extends LitElement {
     }
   }
 
+  /**
+   * 加载 logo
+   */
   private async __loadLogo() {
     if (this.logo) {
       this[INNER].logoImage = await XHQRCodeElement.loadImage(this.logo)
@@ -143,6 +146,9 @@ export class XHQRCodeElement extends LitElement {
     }
   }
 
+  /**
+   * 创建二维码 Symbol
+   */
   private __createQRCodeSymbol() {
     this[INNER].symbol = QRCode.create(this.value, {
       errorCorrectionLevel: this.errorcorrectionlevel,
@@ -150,6 +156,9 @@ export class XHQRCodeElement extends LitElement {
     })
   }
 
+  /**
+   * 绘制二维码
+   */
   private __drawQRCode() {
     const area = this[INNER].qrcodeArea
 
@@ -161,8 +170,6 @@ export class XHQRCodeElement extends LitElement {
       this.__createQRCodeSymbol()
     }
 
-    const dpr = window.devicePixelRatio
-    const pixelsize = this.pixelsize * dpr
     const symbol = this[INNER].symbol!
     const matrixSize = symbol.modules.size
 
@@ -171,9 +178,9 @@ export class XHQRCodeElement extends LitElement {
     for (let row = 0; row < matrixSize; row++) {
       for (let col = 0; col < matrixSize; col++) {
         if (symbol.modules.get(row, col)) {
-          const x = area.x + col * pixelsize
-          const y = area.y + row * pixelsize
-          this[INNER].ctx.fillRect(x, y, pixelsize, pixelsize)
+          const x = area.x + col * area.pixelsize
+          const y = area.y + row * area.pixelsize
+          this[INNER].ctx.fillRect(x, y, area.pixelsize, area.pixelsize)
         }
       }
     }
@@ -183,6 +190,9 @@ export class XHQRCodeElement extends LitElement {
     }
   }
 
+  /**
+   * 获取默认的 logo 比例
+   */
   private __getDefaultLogoScale() {
     if (!this[INNER].symbol) {
       return 0.2
@@ -199,6 +209,9 @@ export class XHQRCodeElement extends LitElement {
     return n / matrixSize
   }
 
+  /**
+   * 绘制 logo
+   */
   private __drawLogo() {
     const img = this[INNER].logoImage
 
@@ -235,20 +248,55 @@ export class XHQRCodeElement extends LitElement {
     )
   }
 
+  /**
+   * 计算二维码尺寸
+   */
+  private __calculateQRCodeDimensions() {
+    const dpr = window.devicePixelRatio
+    const matrixSize = this[INNER].symbol!.modules.size
+    let pixelsize = 0
+    let padding = 0
+    let canvasSize = 0
+    let canvasDisplaySize = 0
+
+    if (this.size !== void 0) {
+      const size = this.size * dpr
+      if (this.padding === void 0) {
+        padding = (size / (matrixSize + 4)) * 2
+      } else {
+        padding = this.padding * dpr
+      }
+      const qrcodeSize = size - padding * 2
+      pixelsize = qrcodeSize / matrixSize
+      canvasSize = matrixSize * pixelsize + padding * 2
+      canvasDisplaySize = canvasSize / dpr
+    } else {
+      pixelsize = this.pixelsize * dpr
+      if (this.padding === void 0) {
+        padding = pixelsize * 2
+      } else {
+        padding = this.padding * dpr
+      }
+      canvasSize = matrixSize * pixelsize + padding * 2
+      canvasDisplaySize = canvasSize / dpr
+    }
+    return { matrixSize, pixelsize, padding, canvasSize, canvasDisplaySize }
+  }
+
+  /**
+   * 绘制
+   */
   private __draw() {
     this.__createQRCodeSymbol()
 
-    const dpr = window.devicePixelRatio
-    const matrixSize = this[INNER].symbol!.modules.size
-    const pixelsize = this.pixelsize * dpr
-    const padding = this.padding ?? pixelsize * 2
-    const canvasSize = matrixSize * pixelsize + padding * 2
-    const canvasDisplaySize = canvasSize / dpr
+    const { matrixSize, pixelsize, padding, canvasSize, canvasDisplaySize } =
+      this.__calculateQRCodeDimensions()
 
     this[INNER].qrcodeArea = {
       x: padding,
       y: padding,
       s: matrixSize * pixelsize,
+      pixelsize,
     }
 
     this[INNER].canvas.width = canvasSize
