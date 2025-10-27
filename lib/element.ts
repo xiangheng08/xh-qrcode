@@ -1,7 +1,7 @@
 import { LitElement, css } from 'lit'
 import { customElement, property } from 'lit/decorators.js'
 import * as QRCode from './core/qrcode'
-import { INNER, type InnerState, type QRCodeArea } from './inner'
+import { INNER, type InnerState } from './inner'
 
 /**
  * a simple qrcode component
