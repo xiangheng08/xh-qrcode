@@ -1,4 +1,4 @@
-import { LitElement, css } from 'lit'
+import { LitElement, html, css } from 'lit'
 import { customElement, property } from 'lit/decorators.js'
 import * as QRCode from './core/qrcode'
 import { INNER, type InnerState } from './inner'
@@ -87,34 +87,55 @@ export class XHQRCodeElement extends LitElement {
   logopadding = 0.1
 
   /**
+   * 是否有遮罩层
+   */
+  @property({ type: Boolean })
+  mask = false
+
+  /**
+   * 遮罩层颜色
+   */
+  @property()
+  maskcolor = 'rgba(255, 255, 255, 0.9)'
+
+  /**
    * 内部状态
    */
   declare protected [INNER]: InnerState
 
+  /**
+   * 二维码大小
+   */
   get qrcodeSize() {
     return this[INNER].qrcodeArea?.s
   }
 
-  constructor() {
-    super()
+  render() {
+    return html`
+      <canvas></canvas>
+      <div
+        class="mask"
+        style="--mask-color: ${this.maskcolor}; display: ${this.mask ? 'flex' : 'none'};"
+      >
+        <slot></slot>
+      </div>
+    `
+  }
 
-    const canvas = document.createElement('canvas')
+  firstUpdated() {
+    const canvas = this.shadowRoot!.querySelector('canvas')
+    if (!canvas) {
+      throw new Error('Canvas is not defined')
+    }
+
     const ctx = canvas.getContext('2d')
-
     if (!ctx) {
       throw new Error('Failed to create canvas context')
     }
 
     this[INNER] = { canvas, ctx }
+
     this.__loadLogo()
-  }
-
-  render() {
-    return this[INNER].canvas
-  }
-
-  firstUpdated() {
-    this.__draw()
   }
 
   updated(changedProperties: Map<string, unknown>) {
@@ -397,12 +418,24 @@ export class XHQRCodeElement extends LitElement {
 
   static styles = css`
     :host {
-      display: block;
+      position: relative;
     }
 
     canvas {
       image-rendering: pixelated;
       display: block;
+    }
+
+    .mask {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: var(--mask-color, rgba(255, 255, 255, 0.9));
+      display: flex;
+      align-items: center;
+      justify-content: center;
     }
   `
 }
