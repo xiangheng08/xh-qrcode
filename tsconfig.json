@@ -20,9 +20,9 @@
     "noUnusedLocals": true,
     "noUnusedParameters": true,
     "noFallthroughCasesInSwitch": true,
-    
+
     /* Type declaration files */
-    "typeRoots": ["./node_modules/@types", "."]
+    "typeRoots": ["./node_modules/@types", ".", "./node_modules"]
   },
   "include": ["lib", "src", "types.d.ts"]
 }
