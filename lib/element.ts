@@ -1,6 +1,7 @@
-import { LitElement, css, html } from 'lit'
+import { LitElement, css } from 'lit'
 import { customElement, property } from 'lit/decorators.js'
 import * as QRCode from './core/qrcode'
+import { INNER, type InnerState, type QRCodeArea } from './inner'
 
 /**
  * a simple qrcode component
@@ -77,21 +78,39 @@ export class XHQRCodeElement extends LitElement {
    * Logo 大小比例 (相对于二维码大小)
    */
   @property({ type: Number })
-  logoscale = 0.2
+  logoscale?: number
 
   /**
    * Logo 内边距
    */
   @property({ type: Number })
-  logopadding = 4
+  logopadding = 0.1
 
-  private __canvas?: HTMLCanvasElement
-  private __ctx: CanvasRenderingContext2D | null = null
-  private __symbol?: QRCode.QRCodeSymbol
-  private __logoImage?: HTMLImageElement
+  /**
+   * 内部状态
+   */
+  declare protected [INNER]: InnerState
+
+  get qrcodeSize() {
+    return this[INNER].qrcodeArea?.s
+  }
+
+  constructor() {
+    super()
+
+    const canvas = document.createElement('canvas')
+    const ctx = canvas.getContext('2d')
+
+    if (!ctx) {
+      throw new Error('Failed to create canvas context')
+    }
+
+    this[INNER] = { canvas, ctx }
+    this.__loadLogo()
+  }
 
   render() {
-    return html`<canvas></canvas>`
+    return this[INNER].canvas
   }
 
   firstUpdated() {
@@ -108,125 +127,142 @@ export class XHQRCodeElement extends LitElement {
       changedProperties.has('background') ||
       changedProperties.has('padding') ||
       changedProperties.has('logo') ||
-      changedProperties.has('logoscale')
+      changedProperties.has('logoscale') ||
+      changedProperties.has('logopadding')
     ) {
       this.__draw()
     }
   }
 
-  private __getDPR() {
-    return window.devicePixelRatio || 1
+  private async __loadLogo() {
+    if (this.logo) {
+      this[INNER].logoImage = await XHQRCodeElement.loadImage(this.logo)
+      if (this[INNER].qrcodeArea) {
+        this.__drawLogo()
+      }
+    }
   }
 
-  private __setupCanvas() {
-    let canvas = this.__canvas
-    let ctx = this.__ctx
-
-    if (!canvas) {
-      canvas = this.renderRoot?.querySelector('canvas') as HTMLCanvasElement
-      if (!canvas) {
-        throw new Error('Failed to find canvas element')
-      }
-      this.__canvas = canvas
-    }
-
-    if (!ctx) {
-      ctx = canvas.getContext('2d')
-      if (!ctx) {
-        throw new Error('Failed to get 2D context')
-      }
-      this.__ctx = ctx
-    }
-
-    return { canvas, ctx }
+  private __createQRCodeSymbol() {
+    this[INNER].symbol = QRCode.create(this.value, {
+      errorCorrectionLevel: this.errorcorrectionlevel,
+      version: this.version,
+    })
   }
 
-  private __drawQRCode(startX: number, startY: number) {
-    const { ctx } = this.__setupCanvas()
+  private __drawQRCode() {
+    const area = this[INNER].qrcodeArea
 
-    const dpr = this.__getDPR()
+    if (!area) {
+      throw new Error('QRCodeArea is not defined')
+    }
+
+    if (!this[INNER].symbol) {
+      this.__createQRCodeSymbol()
+    }
+
+    const dpr = window.devicePixelRatio
     const pixelsize = this.pixelsize * dpr
-    const symbol = this.__symbol!
+    const symbol = this[INNER].symbol!
     const matrixSize = symbol.modules.size
 
     // 绘制二维码
-    ctx.fillStyle = this.color
+    this[INNER].ctx.fillStyle = this.color
     for (let row = 0; row < matrixSize; row++) {
       for (let col = 0; col < matrixSize; col++) {
         if (symbol.modules.get(row, col)) {
-          const x = startX + col * pixelsize
-          const y = startY + row * pixelsize
-          ctx.fillRect(x, y, pixelsize, pixelsize)
+          const x = area.x + col * pixelsize
+          const y = area.y + row * pixelsize
+          this[INNER].ctx.fillRect(x, y, pixelsize, pixelsize)
         }
       }
     }
+
+    if (this.logo) {
+      this.__drawLogo()
+    }
   }
 
-  private async __drawLogo(canvasSize: number) {
-    try {
-      let img = this.__logoImage
-
-      if (!img) {
-        img = await XHQRCodeElement.loadImage(this.logo!)
-        this.__logoImage = img
-      }
-
-      const { ctx } = this.__setupCanvas()
-
-      // 计算 logo 尺寸和位置
-      const logoSize = Math.min(canvasSize * this.logoscale, canvasSize * 0.3) // 限制最大为二维码的30%
-      const logoX = (canvasSize - logoSize) / 2
-      const logoY = (canvasSize - logoSize) / 2
-      const imgSize = logoSize - this.logopadding * 2
-
-      // 绘制白色背景（防止透明logo与二维码图案混合）
-      ctx.fillStyle = this.background
-      ctx.fillRect(logoX, logoY, logoSize, logoSize)
-
-      // 绘制 logo
-      ctx.drawImage(img, logoX + this.logopadding, logoY + this.logopadding, imgSize, imgSize)
-    } catch (error) {
-      console.error('Error drawing logo:', error)
+  private __getDefaultLogoScale() {
+    if (!this[INNER].symbol) {
+      return 0.2
     }
+
+    const matrixSize = this[INNER].symbol.modules.size
+
+    let n = Math.round(matrixSize * 0.2)
+
+    if ((matrixSize % 2 !== 0 && n % 2 === 0) || (matrixSize % 2 === 0 && n % 2 !== 0)) {
+      n += 1
+    }
+
+    return n / matrixSize
+  }
+
+  private __drawLogo() {
+    const img = this[INNER].logoImage
+
+    if (!img) {
+      return this.__loadLogo()
+    }
+
+    const area = this[INNER].qrcodeArea
+
+    if (!area) {
+      throw new Error('QRCodeArea is not defined')
+    }
+
+    const qrcodeSize = this.qrcodeSize!
+    // 限制最大为二维码的 30%，以免影响识别率
+    const logoscale = Math.min(this.logoscale ?? this.__getDefaultLogoScale(), 0.3)
+    const logoAreaSize = qrcodeSize * logoscale
+    const logoAreaX = area.x + (qrcodeSize - logoAreaSize) / 2
+    const logoAreaY = area.y + (qrcodeSize - logoAreaSize) / 2
+    const logopadding = logoAreaSize * this.logopadding
+    const logoSize = logoAreaSize - logopadding * 2
+
+    // 绘制背景（防止透明logo与二维码图案混合）
+    this[INNER].ctx.fillStyle = this.background
+    this[INNER].ctx.fillRect(logoAreaX, logoAreaY, logoAreaSize, logoAreaSize)
+
+    // 绘制 logo
+    this[INNER].ctx.drawImage(
+      img,
+      logoAreaX + logopadding,
+      logoAreaY + logopadding,
+      logoSize,
+      logoSize,
+    )
   }
 
   private __draw() {
-    try {
-      this.__symbol = QRCode.create(this.value, {
-        errorCorrectionLevel: this.errorcorrectionlevel,
-        version: this.version,
-      })
+    this.__createQRCodeSymbol()
 
-      const dpr = this.__getDPR()
-      const matrixSize = this.__symbol.modules.size
-      const pixelsize = this.pixelsize * dpr
-      const padding = (this.padding || pixelsize * 2) * dpr
-      const canvasSize = matrixSize * pixelsize + padding * 2
-      const canvasDisplaySize = canvasSize / dpr
+    const dpr = window.devicePixelRatio
+    const matrixSize = this[INNER].symbol!.modules.size
+    const pixelsize = this.pixelsize * dpr
+    const padding = this.padding ?? pixelsize * 2
+    const canvasSize = matrixSize * pixelsize + padding * 2
+    const canvasDisplaySize = canvasSize / dpr
 
-      const { canvas, ctx } = this.__setupCanvas()
-
-      canvas.width = canvasSize
-      canvas.height = canvasSize
-      canvas.style.width = canvasDisplaySize + 'px'
-      canvas.style.height = canvasDisplaySize + 'px'
-
-      ctx.clearRect(0, 0, canvasSize, canvasSize)
-
-      // 绘制背景
-      ctx.fillStyle = this.background
-      ctx.fillRect(0, 0, canvasSize, canvasSize)
-
-      // 绘制二维码
-      this.__drawQRCode(padding, padding)
-
-      // 绘制 logo
-      if (this.logo) {
-        this.__drawLogo(canvasSize)
-      }
-    } catch (error) {
-      console.error('Error generating QR code:', error)
+    this[INNER].qrcodeArea = {
+      x: padding,
+      y: padding,
+      s: matrixSize * pixelsize,
     }
+
+    this[INNER].canvas.width = canvasSize
+    this[INNER].canvas.height = canvasSize
+    this[INNER].canvas.style.width = canvasDisplaySize + 'px'
+    this[INNER].canvas.style.height = canvasDisplaySize + 'px'
+
+    this[INNER].ctx.clearRect(0, 0, canvasSize, canvasSize)
+
+    // 绘制背景
+    this[INNER].ctx.fillStyle = this.background
+    this[INNER].ctx.fillRect(0, 0, canvasSize, canvasSize)
+
+    this.__drawQRCode()
   }
 
   static styles = css`
