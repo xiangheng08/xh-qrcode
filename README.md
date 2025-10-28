@@ -71,6 +71,6 @@ npm run dev
 
 ## 代码来源
 
-[lib/core](https://github.com/xiangheng08/xh-qrcode/tree/HEAD/lib/core) 目录下的代码来源于 https://github.com/soldair/node-qrcode.git，由 https://lingma.aliyun.com/ 转换为 TypeScript 并将其中的注释翻译为中文。
+[lib/core](https://github.com/xiangheng08/xh-qrcode/tree/HEAD/lib/core) 目录下的代码来源于 [node-qrcode](https://github.com/soldair/node-qrcode.git)，由 [lingma](https://lingma.aliyun.com/) 转换为 TypeScript 并将其中的注释翻译为中文。
 
-The code in the [lib/core](https://github.com/xiangheng08/xh-qrcode/tree/HEAD/lib/core) directory originates from https://github.com/soldair/node-qrcode.git, converted to TypeScript and translated comments into Chinese by https://lingma.aliyun.com/.
+The code in the [lib/core](https://github.com/xiangheng08/xh-qrcode/tree/HEAD/lib/core) directory originates from [node-qrcode](https://github.com/soldair/node-qrcode.git), converted to TypeScript and translated comments into Chinese by [lingma](https://lingma.aliyun.com/).
