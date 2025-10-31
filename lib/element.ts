@@ -156,6 +156,48 @@ export class XHQRCodeElement extends LitElement {
   }
 
   /**
+   * 返回二维码的 dataURL
+   */
+  toDataURL(): string {
+    if (!this[INNER].canvas) {
+      throw new Error('canvas is not ready')
+    }
+    return this[INNER].canvas.toDataURL()
+  }
+
+  /**
+   * 返回二维码的 Blob 对象
+   * @param type 输出的格式
+   * @param quality 压缩质量
+   */
+  toBlob(type: string = 'image/png', quality?: number): Promise<Blob> {
+    return new Promise<Blob>((resolve, reject) => {
+      if (!this[INNER].canvas) {
+        return reject(new Error('canvas is not ready'))
+      }
+      this[INNER].canvas.toBlob(
+        (blob) => {
+          if (blob) {
+            resolve(blob)
+          } else {
+            reject(new Error('canvas to blob error'))
+          }
+        },
+        type,
+        quality,
+      )
+    })
+  }
+
+  /**
+   * 返回二维码的 File 对象
+   */
+  async toFile(filename: string = 'qrcode.png', type?: string, quality?: number): Promise<File> {
+    const blob = await this.toBlob(type, quality)
+    return new File([blob], filename, { type: blob.type }) as File
+  }
+
+  /**
    * 加载 logo
    */
   private async __loadLogo() {
@@ -298,12 +340,12 @@ export class XHQRCodeElement extends LitElement {
    */
   private __getDefaultLogoScale() {
     if (!this[INNER].symbol) {
-      return 0.2
+      return 0.25
     }
 
     const matrixSize = this[INNER].symbol.modules.size
 
-    let n = Math.round(matrixSize * 0.2)
+    let n = Math.round(matrixSize * 0.25)
 
     if ((matrixSize % 2 !== 0 && n % 2 === 0) || (matrixSize % 2 === 0 && n % 2 !== 0)) {
       n += 1
