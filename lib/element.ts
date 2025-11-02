@@ -151,7 +151,11 @@ export class XHQRCodeElement extends LitElement {
       changedProperties.has('logoscale') ||
       changedProperties.has('logopadding')
     ) {
-      this.__draw()
+      try {
+        this.__draw()
+      } catch (error) {
+        this.__emitError(error)
+      }
     }
   }
 
@@ -195,6 +199,11 @@ export class XHQRCodeElement extends LitElement {
   async toFile(filename: string = 'qrcode.png', type?: string, quality?: number): Promise<File> {
     const blob = await this.toBlob(type, quality)
     return new File([blob], filename, { type: blob.type }) as File
+  }
+
+  protected __emitError(error: unknown) {
+    const e = new ErrorEvent('error', { error })
+    this.dispatchEvent(e)
   }
 
   /**
