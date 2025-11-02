@@ -200,7 +200,7 @@ export class XHQRCodeElement extends LitElement {
   /**
    * 加载 logo
    */
-  private async __loadLogo() {
+  protected async __loadLogo() {
     if (this.logo) {
       this[INNER].logoImage = await XHQRCodeElement.loadImage(this.logo)
       if (this[INNER].qrcodeArea) {
@@ -212,7 +212,7 @@ export class XHQRCodeElement extends LitElement {
   /**
    * 创建二维码 Symbol
    */
-  private __createQRCodeSymbol() {
+  protected __createQRCodeSymbol() {
     this[INNER].symbol = QRCode.create(this.value, {
       errorCorrectionLevel: this.errorcorrectionlevel,
       version: this.version,
@@ -222,7 +222,7 @@ export class XHQRCodeElement extends LitElement {
   /**
    * 绘制二维码
    */
-  private __drawQRCode() {
+  protected __drawQRCode() {
     const area = this[INNER].qrcodeArea
 
     if (!area) {
@@ -338,7 +338,7 @@ export class XHQRCodeElement extends LitElement {
   /**
    * 获取默认的 logo 比例
    */
-  private __getDefaultLogoScale() {
+  protected __getDefaultLogoScale() {
     if (!this[INNER].symbol) {
       return 0.25
     }
@@ -357,7 +357,7 @@ export class XHQRCodeElement extends LitElement {
   /**
    * 绘制 logo
    */
-  private __drawLogo() {
+  protected __drawLogo() {
     const img = this[INNER].logoImage
 
     if (!img) {
@@ -396,7 +396,7 @@ export class XHQRCodeElement extends LitElement {
   /**
    * 计算二维码尺寸
    */
-  private __calculateQRCodeDimensions() {
+  protected __calculateQRCodeDimensions() {
     const dpr = window.devicePixelRatio
     const matrixSize = this[INNER].symbol!.modules.size
     let pixelsize = 0
@@ -431,7 +431,7 @@ export class XHQRCodeElement extends LitElement {
   /**
    * 绘制
    */
-  private __draw() {
+  protected __draw() {
     this.__createQRCodeSymbol()
 
     const { matrixSize, pixelsize, padding, canvasSize, canvasDisplaySize } =

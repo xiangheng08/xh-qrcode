@@ -7,17 +7,27 @@
     <title>xh-qrcode</title>
     <link rel="stylesheet" href="./src/index.css" />
     <script type="module" src="/lib/main.ts"></script>
+    <script type="module" src="/lib/elements/group.ts"></script>
   </head>
 
   <body>
     <div class="dev-qrcode">
-      <xh-qrcode
+      <!-- <xh-qrcode
         value="hello world!"
         logo="./src/assets/vite.svg"
         errorcorrectionlevel="H"
         size="160"
       >
-      </xh-qrcode>
+      </xh-qrcode> -->
+      <xh-group-qrcode
+        value="大苏打的飞洒飞洒放入冬瓜把电话给他电话然后他你好"
+        groupname="群聊：相亲相爱一家人1111"
+        groupavatar="./src/assets/vite.svg"
+        logo="./src/assets/vite.svg"
+        errorcorrectionlevel="H"
+        tips="该二维码7天内(2月30日前)有效，重新进入将更新"
+        logoscale="0.2"
+      />
     </div>
 
     <div class="examples">
