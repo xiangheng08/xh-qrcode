@@ -17,6 +17,7 @@
   "bugs": {
     "url": "https://github.com/xiangheng08/xh-qrcode/issues"
   },
+  "license_url": "https://github.com/xiangheng08/xh-qrcode/blob/main/LICENSE",
   "type": "module",
   "files": [
     "dist"
