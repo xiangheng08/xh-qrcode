@@ -56,6 +56,9 @@ export interface InnerStateWithGroup extends InnerState {
   tipsLineHeight?: number
 }
 
+/**
+ * 群二维码
+ */
 @customElement('xh-group-qrcode')
 export class XHQRCodeGroupElement extends XHQRCodeElement {
   protected static readonly redrawProperties = [
