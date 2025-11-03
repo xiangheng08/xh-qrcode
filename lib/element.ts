@@ -36,13 +36,13 @@ export class XHQRCodeElement extends LitElement {
    * 纠错码级别 (L, M, Q, H)
    */
   @property()
-  errorcorrectionlevel = 'M'
+  errorCorrectionLevel = 'M'
 
   /**
    * 二维码像素大小
    */
   @property({ type: Number })
-  pixelsize = 4
+  pixelSize = 4
 
   /**
    * 二维码像素颜色
@@ -78,13 +78,13 @@ export class XHQRCodeElement extends LitElement {
    * Logo 大小比例 (0-1，相对于二维码大小)
    */
   @property({ type: Number })
-  logoscale?: number
+  logoScale?: number
 
   /**
    * Logo 内边距（0-1，相对于 Logo 大小）
    */
   @property({ type: Number })
-  logopadding = 0.1
+  logoPadding = 0.1
 
   /**
    * 是否有遮罩层
@@ -96,7 +96,7 @@ export class XHQRCodeElement extends LitElement {
    * 遮罩层颜色
    */
   @property()
-  maskcolor = 'rgba(255, 255, 255, 0.9)'
+  maskColor = 'rgba(255, 255, 255, 0.9)'
 
   /**
    * 内部状态
@@ -115,7 +115,7 @@ export class XHQRCodeElement extends LitElement {
       <canvas></canvas>
       <div
         class="mask"
-        style="--mask-color: ${this.maskcolor}; display: ${this.mask ? 'flex' : 'none'};"
+        style="--mask-color: ${this.maskColor}; display: ${this.mask ? 'flex' : 'none'};"
       >
         <slot></slot>
       </div>
@@ -142,14 +142,14 @@ export class XHQRCodeElement extends LitElement {
     if (
       changedProperties.has('value') ||
       changedProperties.has('version') ||
-      changedProperties.has('errorcorrectionlevel') ||
-      changedProperties.has('pixelsize') ||
+      changedProperties.has('errorCorrectionLevel') ||
+      changedProperties.has('pixelSize') ||
       changedProperties.has('color') ||
       changedProperties.has('background') ||
       changedProperties.has('padding') ||
       changedProperties.has('logo') ||
-      changedProperties.has('logoscale') ||
-      changedProperties.has('logopadding')
+      changedProperties.has('logoScale') ||
+      changedProperties.has('logoPadding')
     ) {
       try {
         this.__draw()
@@ -223,7 +223,7 @@ export class XHQRCodeElement extends LitElement {
    */
   protected __createQRCodeSymbol() {
     this[INNER].symbol = QRCode.create(this.value, {
-      errorCorrectionLevel: this.errorcorrectionlevel,
+      errorCorrectionLevel: this.errorCorrectionLevel,
       version: this.version,
     })
   }
@@ -381,11 +381,11 @@ export class XHQRCodeElement extends LitElement {
 
     const qrcodeSize = this.qrcodeSize!
     // 限制最大为二维码的 30%，以免影响识别率
-    const logoscale = Math.min(this.logoscale ?? this.__getDefaultLogoScale(), 0.3)
+    const logoscale = Math.min(this.logoScale ?? this.__getDefaultLogoScale(), 0.3)
     const logoAreaSize = qrcodeSize * logoscale
     const logoAreaX = area.x + (qrcodeSize - logoAreaSize) / 2
     const logoAreaY = area.y + (qrcodeSize - logoAreaSize) / 2
-    const logopadding = logoAreaSize * this.logopadding
+    const logopadding = logoAreaSize * this.logoPadding
     const logoSize = logoAreaSize - logopadding * 2
 
     // 绘制背景（防止透明logo与二维码图案混合）
@@ -425,7 +425,7 @@ export class XHQRCodeElement extends LitElement {
       canvasSize = matrixSize * pixelsize + padding * 2
       canvasDisplaySize = canvasSize / dpr
     } else {
-      pixelsize = this.pixelsize * dpr
+      pixelsize = this.pixelSize * dpr
       if (this.padding === void 0) {
         padding = pixelsize * 2
       } else {
