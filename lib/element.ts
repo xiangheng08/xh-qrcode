@@ -2,23 +2,28 @@ import { LitElement, html, css } from 'lit'
 import { customElement, property } from 'lit/decorators.js'
 import * as QRCode from './core/qrcode'
 import { INNER, type InnerState } from './inner'
+import { loadImage } from './utils/image'
 
 /**
  * a simple qrcode component
  */
 @customElement('xh-qrcode')
 export class XHQRCodeElement extends LitElement {
-  static loadImage(url: string, width?: number, height?: number): Promise<HTMLImageElement> {
-    return new Promise((resolve, reject) => {
-      const img = new Image()
-      img.crossOrigin = 'anonymous'
-      img.style.width = width ? width + 'px' : ''
-      img.style.height = height ? height + 'px' : ''
-      img.src = url
-      img.onload = () => resolve(img)
-      img.onerror = reject
-    })
-  }
+  /**
+   * 当这些属性发生变化时，将触发二维码重新绘制
+   */
+  protected static readonly redrawProperties = [
+    'value',
+    'version',
+    'errorCorrectionLevel',
+    'pixelSize',
+    'color',
+    'background',
+    'padding',
+    'logo',
+    'logoScale',
+    'logoPadding',
+  ]
 
   /**
    * 二维码内容
@@ -135,22 +140,13 @@ export class XHQRCodeElement extends LitElement {
 
     this[INNER] = { canvas, ctx }
 
-    this.__loadLogo()
+    this.__loadLogo().catch((err) => {
+      this.__emitError(err)
+    })
   }
 
   updated(changedProperties: Map<string, unknown>) {
-    if (
-      changedProperties.has('value') ||
-      changedProperties.has('version') ||
-      changedProperties.has('errorCorrectionLevel') ||
-      changedProperties.has('pixelSize') ||
-      changedProperties.has('color') ||
-      changedProperties.has('background') ||
-      changedProperties.has('padding') ||
-      changedProperties.has('logo') ||
-      changedProperties.has('logoScale') ||
-      changedProperties.has('logoPadding')
-    ) {
+    if (XHQRCodeElement.redrawProperties.some((property) => changedProperties.has(property))) {
       try {
         this.__draw()
       } catch (error) {
@@ -201,6 +197,9 @@ export class XHQRCodeElement extends LitElement {
     return new File([blob], filename, { type: blob.type }) as File
   }
 
+  /**
+   * 发出错误事件
+   */
   protected __emitError(error: unknown) {
     const e = new ErrorEvent('error', { error })
     this.dispatchEvent(e)
@@ -211,7 +210,7 @@ export class XHQRCodeElement extends LitElement {
    */
   protected async __loadLogo() {
     if (this.logo) {
-      this[INNER].logoImage = await XHQRCodeElement.loadImage(this.logo)
+      this[INNER].logoImage = await loadImage(this.logo, { crossOrigin: 'anonymous' })
       if (this[INNER].qrcodeArea) {
         this.__drawLogo()
       }
@@ -370,7 +369,10 @@ export class XHQRCodeElement extends LitElement {
     const img = this[INNER].logoImage
 
     if (!img) {
-      return this.__loadLogo()
+      this.__loadLogo().catch((err) => {
+        this.__emitError(err)
+      })
+      return
     }
 
     const area = this[INNER].qrcodeArea
