@@ -1,6 +1,7 @@
 import { dirname, resolve } from 'node:path'
 import { fileURLToPath } from 'node:url'
 import { defineConfig } from 'vite'
+import dts from 'vite-plugin-dts'
 
 const __dirname = dirname(fileURLToPath(import.meta.url))
 
@@ -10,10 +11,12 @@ export default defineConfig({
   },
   build: {
     lib: {
-      entry: resolve(__dirname, 'lib/main.ts'),
+      entry: {
+        'xh-qrcode': resolve(__dirname, 'lib/main.ts'),
+        'elements/group': resolve(__dirname, 'lib/elements/group.ts'),
+      },
       name: 'XHQRCode',
-      // 将添加适当的扩展名后缀
-      fileName: 'xh-qrcode',
     },
   },
+  plugins: [dts({ tsconfigPath: './tsconfig.dts.json' })],
 })
