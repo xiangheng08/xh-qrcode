@@ -1,83 +1,69 @@
 <!doctype html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>xh-qrcode</title>
-    <link rel="stylesheet" href="./src/index.css" />
-    <script type="module" src="/lib/main.ts"></script>
-    <script type="module" src="/lib/elements/group.ts"></script>
-  </head>
 
-  <body>
-    <div class="dev-qrcode">
-      <!-- <xh-qrcode
+<head>
+  <meta charset="UTF-8" />
+  <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>xh-qrcode</title>
+  <link rel="stylesheet" href="./src/index.css" />
+  <script type="module" src="/src/main.ts"></script>
+</head>
+
+<body>
+  <div class="dev-qrcode">
+    <canvas id="test" width="128" height="128"></canvas>
+    <!-- <xh-qrcode
         value="hello world!"
         logo="./src/assets/vite.svg"
         errorcorrectionlevel="H"
         size="160"
       >
       </xh-qrcode> -->
-      <xh-group-qrcode
-        value="大苏打的飞洒飞洒放入冬瓜把电话给他电话然后他你好"
-        groupname="群聊：相亲相爱一家人1111"
-        groupavatar="./src/assets/vite.svg"
-        logo="./src/assets/vite.svg"
-        errorcorrectionlevel="H"
-        tips="该二维码7天内(2月30日前)有效，重新进入将更新"
-        logoscale="0.2"
-      />
-    </div>
+    <xh-group-qrcode value="大苏打的飞洒飞洒放入冬瓜把电话给他电话然后他你好" groupname="群聊：相亲相爱一家人1111" groupavatar="./src/assets/vite.svg"
+      logo="./src/assets/vite.svg" errorcorrectionlevel="H" tips="该二维码7天内(2月30日前)有效，重新进入将更新" logoscale="0.2" />
+  </div>
 
-    <div class="examples">
-      <div class="example-item">
-        <h3>基础二维码</h3>
-        <xh-qrcode value="Basic QR Code"></xh-qrcode>
-      </div>
-      <div class="example-item">
-        <h3>自定义颜色</h3>
-        <xh-qrcode value="Colored QR Code" color="#00ff00" background="#000000"></xh-qrcode>
-      </div>
-      <div class="example-item">
-        <h3>自定义大小</h3>
-        <xh-qrcode value="Sized QR Code" size="200"></xh-qrcode>
-      </div>
-      <div class="example-item">
-        <h3>高纠错级别</h3>
-        <xh-qrcode value="High Error Correction" errorcorrectionlevel="H"></xh-qrcode>
-      </div>
-      <div class="example-item">
-        <h3>带 logo</h3>
-        <xh-qrcode
-          value="With Logo"
-          errorcorrectionlevel="H"
-          logo="./src/assets/vite.svg"
-        ></xh-qrcode>
-      </div>
-      <div class="example-item">
-        <h3>自定义 logo 大小</h3>
-        <xh-qrcode
-          value="Large Logo"
-          errorcorrectionlevel="H"
-          logo="./src/assets/vite.svg"
-          logoscale="0.3"
-        ></xh-qrcode>
-      </div>
-      <div class="example-item">
-        <h3>显示遮罩层</h3>
-        <xh-qrcode value="Masked QR Code" mask></xh-qrcode>
-      </div>
-      <div class="example-item">
-        <h3>自定义遮罩层颜色</h3>
-        <xh-qrcode value="Custom Mask Color" mask maskcolor="rgba(0, 0, 0, 0.8)"></xh-qrcode>
-      </div>
-      <div class="example-item">
-        <h3>带遮罩层内容</h3>
-        <xh-qrcode value="With Mask Content" mask>
-          <span style="background: pink; padding: 4px; border-radius: 4px">Mask Content</span>
-        </xh-qrcode>
-      </div>
+  <div class="examples">
+    <div class="example-item">
+      <h3>基础二维码</h3>
+      <xh-qrcode value="Basic QR Code"></xh-qrcode>
     </div>
-  </body>
+    <div class="example-item">
+      <h3>自定义颜色</h3>
+      <xh-qrcode value="Colored QR Code" color="#00ff00" background="#000000"></xh-qrcode>
+    </div>
+    <div class="example-item">
+      <h3>自定义大小</h3>
+      <xh-qrcode value="Sized QR Code" size="200"></xh-qrcode>
+    </div>
+    <div class="example-item">
+      <h3>高纠错级别</h3>
+      <xh-qrcode value="High Error Correction" errorcorrectionlevel="H"></xh-qrcode>
+    </div>
+    <div class="example-item">
+      <h3>带 logo</h3>
+      <xh-qrcode value="With Logo" errorcorrectionlevel="H" logo="./src/assets/vite.svg"></xh-qrcode>
+    </div>
+    <div class="example-item">
+      <h3>自定义 logo 大小</h3>
+      <xh-qrcode value="Large Logo" errorcorrectionlevel="H" logo="./src/assets/vite.svg" logoscale="0.3"></xh-qrcode>
+    </div>
+    <div class="example-item">
+      <h3>显示遮罩层</h3>
+      <xh-qrcode value="Masked QR Code" mask></xh-qrcode>
+    </div>
+    <div class="example-item">
+      <h3>自定义遮罩层颜色</h3>
+      <xh-qrcode value="Custom Mask Color" mask maskcolor="rgba(0, 0, 0, 0.8)"></xh-qrcode>
+    </div>
+    <div class="example-item">
+      <h3>带遮罩层内容</h3>
+      <xh-qrcode value="With Mask Content" mask>
+        <span style="background: pink; padding: 4px; border-radius: 4px">Mask Content</span>
+      </xh-qrcode>
+    </div>
+  </div>
+</body>
+
 </html>

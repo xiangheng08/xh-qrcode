@@ -93,8 +93,16 @@ npm run build
 npm run dev
 ```
 
-## 代码来源
+## 来源声明
+
+### 代码来源
 
 [lib/core](https://github.com/xiangheng08/xh-qrcode/tree/HEAD/lib/core) 目录下的代码来源于 [node-qrcode](https://github.com/soldair/node-qrcode.git)，由 [lingma](https://lingma.aliyun.com/) 转换为 TypeScript 并将其中的注释翻译为中文。
 
 The code in the [lib/core](https://github.com/xiangheng08/xh-qrcode/tree/HEAD/lib/core) directory originates from [node-qrcode](https://github.com/soldair/node-qrcode.git), converted to TypeScript and translated comments into Chinese by [lingma](https://lingma.aliyun.com/).
+
+### Avatars
+
+[src/assets/avatars](https://github.com/xiangheng08/xh-qrcode/tree/HEAD/src/assets/avatars) 目录下的头像来源于[头像库](https://www.tuxiangyan.com/)。
+
+[src/assets/avatars](https://github.com/xiangheng08/xh-qrcode/tree/HEAD/src/assets/avatars) 目录下的头像仅用于学习/展示，本项目不将其用于商业用途。其他使用者请注意：从本仓库获取的这些头像请勿随意使用，若因此造成任何法律风险与本项目和[本项目作者](https://github.com/xiangheng08)无关。
