@@ -1,12 +1,19 @@
 import { customElement, property } from 'lit/decorators.js'
 import { XHQRCodeElement } from '../element'
 import { INNER, type InnerState } from '../inner'
+import { loadImage } from '../utils/image'
+import { drawGroupAvatar, type Fit } from '../utils/group-avatar'
 
 export interface InnerStateWithGroup extends InnerState {
   /**
    * 群头像
    */
   groupAvatarImage?: HTMLImageElement
+
+  /**
+   * 群头像
+   */
+  groupAvatarImages?: HTMLImageElement[]
 
   /**
    * 群头像 X 坐标
@@ -51,6 +58,28 @@ export interface InnerStateWithGroup extends InnerState {
 
 @customElement('xh-group-qrcode')
 export class XHQRCodeGroupElement extends XHQRCodeElement {
+  protected static readonly redrawProperties = [
+    ...XHQRCodeElement.redrawProperties,
+    'width',
+    'paddingTop',
+    'paddingBottom',
+    'groupAvatarSize',
+    'defaultGroupAvatar',
+    'groupAvatarBackground',
+    'groupAvatarFit',
+    'groupAvatarRadius',
+    'groupAvatarGap',
+    'groupAvatarPadding',
+    'groupName',
+    'groupNameFont',
+    'groupNameColor',
+    'groupNameWidth',
+    'tips',
+    'tipsWidth',
+    'tipsColor',
+    'tipsFont',
+    'qrcodeScale',
+  ]
   /**
    * 群二维码宽度
    */
@@ -73,13 +102,67 @@ export class XHQRCodeGroupElement extends XHQRCodeElement {
    * 群头像
    */
   @property()
-  groupAvatar = ''
+  groupAvatar?: string
+
+  /**
+   * 群头像
+   * @description 会被 `groupAvatar` 覆盖
+   */
+  @property({ type: Array })
+  groupAvatars?: string[]
 
   /**
    * 群头像大小（0-1，相对于宽度）
    */
   @property({ type: Number })
   groupAvatarSize = 0.16
+
+  /**
+   * 默认群头像
+   * @description 仅对 `groupAvatars` 生效
+   */
+  @property()
+  defaultGroupAvatar?: string
+
+  /**
+   * 群头像背景色
+   * @description 仅对 `groupAvatars` 生效
+   * @default '#dddddd'
+   */
+  @property()
+  groupAvatarBackground?: string
+
+  /**
+   * 群头像的每个头像如何适应容器
+   * @description 仅对 `groupAvatars` 生效
+   * @default 'cover'
+   */
+  @property()
+  groupAvatarFit?: Fit
+
+  /**
+   * 群头像圆角（0-1，相对于头像大小）
+   * @description 仅对 `groupAvatars` 生效
+   * @default 0.072
+   */
+  @property({ type: Number })
+  groupAvatarRadius?: number
+
+  /**
+   * 群头像的每个头像的间隔（0-1，相对于头像大小）
+   * @description 仅对 `groupAvatars` 生效
+   * @default 0.035
+   */
+  @property({ type: Number })
+  groupAvatarGap?: number
+
+  /**
+   * 群头像的内边距（0-1，相对于头像大小）
+   * @description 仅对 `groupAvatars` 生效
+   * @default 0.04
+   */
+  @property({ type: Number })
+  groupAvatarPadding?: number
 
   /**
    * 群名称
@@ -99,24 +182,6 @@ export class XHQRCodeGroupElement extends XHQRCodeElement {
    */
   @property()
   groupNameColor = '#000000'
-
-  /**
-   * 群名称文本对齐方式
-   */
-  @property()
-  groupNameTextAlign: CanvasTextAlign = 'center'
-
-  /**
-   * 群名称文本对齐方式
-   */
-  @property()
-  groupNameDirection: CanvasDirection = 'inherit'
-
-  /**
-   * 群名称文本垂直位置
-   */
-  @property()
-  groupNameTextBaseline: CanvasTextBaseline = 'alphabetic'
 
   /**
    * 群名称宽度（0-1，相对于宽度）
@@ -140,7 +205,7 @@ export class XHQRCodeGroupElement extends XHQRCodeElement {
    * 提示语颜色
    */
   @property()
-  tipsColor = '#b2b2b2'
+  tipsColor = '#b4b4b4'
 
   /**
    * 提示语字体
@@ -165,7 +230,30 @@ export class XHQRCodeGroupElement extends XHQRCodeElement {
    */
   declare protected [INNER]: InnerStateWithGroup
 
-  protected __xxx(value: string) {
+  firstUpdated() {
+    super.firstUpdated()
+    this.__loadGroupAvatar().catch((err) => {
+      this.__emitError(err)
+    })
+  }
+
+  updated(changedProperties: Map<string, unknown>) {
+    if (XHQRCodeGroupElement.redrawProperties.some((property) => changedProperties.has(property))) {
+      try {
+        this.__draw()
+      } catch (error) {
+        this.__emitError(error)
+      }
+    }
+
+    if (changedProperties.has('groupAvatar') || changedProperties.has('groupAvatars')) {
+      this.__loadGroupAvatar().catch((err) => {
+        this.__emitError(err)
+      })
+    }
+  }
+
+  protected __replacePlaceholders(value: string) {
     const dpr = window.devicePixelRatio
     const width = this.width * dpr
     return value.replace(/\{([^\}]+)\}/g, (_, p1) => {
@@ -176,32 +264,55 @@ export class XHQRCodeGroupElement extends XHQRCodeElement {
 
   protected async __loadGroupAvatar() {
     if (this.groupAvatar) {
-      this[INNER].groupAvatarImage = await XHQRCodeElement.loadImage(this.groupAvatar)
+      this[INNER].groupAvatarImage = await loadImage(this.groupAvatar, { crossOrigin: 'anonymous' })
+      this[INNER].groupAvatarImages = void 0
+      this.__drawGroupAvatar()
+    } else if (this.groupAvatars && this.groupAvatars.length > 0) {
+      this[INNER].groupAvatarImages = []
+      for (let i = 0; i < this.groupAvatars.length; i++) {
+        this[INNER].groupAvatarImages[i] = await loadImage(this.groupAvatars[i], {
+          crossOrigin: 'anonymous',
+        })
+      }
+      this[INNER].groupAvatarImage = void 0
       this.__drawGroupAvatar()
     }
   }
 
   protected __drawGroupAvatar() {
-    const img = this[INNER].groupAvatarImage
-    if (!img) {
-      return this.__loadGroupAvatar()
-    }
-
     const size = this[INNER].groupAvatarSize!
     const x = this[INNER].groupAvatarX!
     const y = this[INNER].groupAvatarY!
 
-    this[INNER].ctx.fillStyle = '#dce2e2'
+    this[INNER].ctx.fillStyle = this.background
     this[INNER].ctx.fillRect(x, y, size, size)
 
-    this[INNER].ctx.drawImage(img, x, y, size, size)
+    if (this[INNER].groupAvatarImage) {
+      this[INNER].ctx.drawImage(this[INNER].groupAvatarImage, x, y, size, size)
+    } else if (this[INNER].groupAvatarImages) {
+      drawGroupAvatar(this[INNER].canvas, this[INNER].groupAvatarImages, {
+        x,
+        y,
+        size,
+        defaultAvatar: this.defaultGroupAvatar,
+        background: this.groupAvatarBackground,
+        fit: this.groupAvatarFit,
+        radius: this.groupAvatarRadius,
+        gap: this.groupAvatarGap,
+        padding: this.groupAvatarPadding,
+      }).catch((err) => {
+        this.__emitError(err)
+      })
+    } else {
+      this.__loadGroupAvatar().catch((err) => {
+        this.__emitError(err)
+      })
+    }
   }
 
   protected __setupGroupNameStyle() {
-    this[INNER].ctx.font = this.__xxx(this.groupNameFont)
-    this[INNER].ctx.textAlign = this.groupNameTextAlign
-    this[INNER].ctx.direction = this.groupNameDirection
-    this[INNER].ctx.textBaseline = this.groupNameTextBaseline
+    this[INNER].ctx.font = this.__replacePlaceholders(this.groupNameFont)
+    this[INNER].ctx.textAlign = 'center'
     this[INNER].ctx.fillStyle = this.groupNameColor
   }
 
@@ -252,7 +363,7 @@ export class XHQRCodeGroupElement extends XHQRCodeElement {
   }
 
   protected __setupTipsStyle() {
-    this[INNER].ctx.font = this.__xxx(this.tipsFont)
+    this[INNER].ctx.font = this.__replacePlaceholders(this.tipsFont)
     this[INNER].ctx.textAlign = 'center'
     this[INNER].ctx.fillStyle = this.tipsColor
   }
@@ -359,8 +470,8 @@ export class XHQRCodeGroupElement extends XHQRCodeElement {
     this[INNER].ctx.fillStyle = this.background
     this[INNER].ctx.fillRect(0, 0, this[INNER].canvas.width, this[INNER].canvas.height)
 
-    this.__loadGroupAvatar()
     this.__drawGroupName()
+    this.__drawGroupAvatar()
     this.__drawQRCode()
     this.__drawLogo()
     if (this.tips) {

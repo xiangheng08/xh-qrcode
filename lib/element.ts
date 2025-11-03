@@ -104,6 +104,12 @@ export class XHQRCodeElement extends LitElement {
   maskColor = 'rgba(255, 255, 255, 0.9)'
 
   /**
+   * resize 事件触发后是否自动重绘
+   */
+  @property({ type: Boolean })
+  resizeRedraw = true
+
+  /**
    * 内部状态
    */
   declare protected [INNER]: InnerState
@@ -113,6 +119,11 @@ export class XHQRCodeElement extends LitElement {
    */
   get qrcodeSize() {
     return this[INNER].qrcodeArea?.s
+  }
+
+  connectedCallback() {
+    super.connectedCallback()
+    window.addEventListener('resize', this.__resizeHandler.bind(this))
   }
 
   render() {
@@ -467,6 +478,19 @@ export class XHQRCodeElement extends LitElement {
     this[INNER].ctx.fillRect(0, 0, canvasSize, canvasSize)
 
     this.__drawQRCode()
+  }
+
+  /**
+   * resize 事件回调
+   */
+  protected __resizeHandler() {
+    if (this.resizeRedraw) {
+      try {
+        this.__draw()
+      } catch (error) {
+        this.__emitError(error)
+      }
+    }
   }
 
   static styles = css`

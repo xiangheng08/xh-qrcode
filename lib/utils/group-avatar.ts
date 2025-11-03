@@ -1,6 +1,8 @@
 import { canvasToBlob, drawRoundedRectPath } from './canvas'
 import { loadImage } from './image'
 
+export type Fit = 'cover' | 'contain' | 'fill' | 'none' | 'scale-down'
+
 export interface DrawGroupAvatarOptions {
   /**
    * 绘制 X 坐标
@@ -37,7 +39,7 @@ export interface DrawGroupAvatarOptions {
    * 每个头像如何适应容器
    * @default 'cover'
    */
-  fit?: 'cover' | 'contain' | 'fill' | 'none' | 'scale-down'
+  fit?: Fit
 
   /**
    * 圆角（0-1，相对于头像大小）
@@ -129,7 +131,6 @@ export async function drawGroupAvatar(
     `
   }
 
-  ctx.clearRect(x, y, size, size)
   ctx.fillStyle = background
   drawRoundedRectPath(ctx, x, y, size, size, _radius)
   ctx.fill()
@@ -137,7 +138,7 @@ export async function drawGroupAvatar(
   for (let i = 0; i < images.length; i++) {
     const image = images[i]
     const pos = positions[i]
-    ctx.drawImage(image, pos.x, pos.y, itemSize, itemSize)
+    ctx.drawImage(image, pos.x + x, pos.y + y, itemSize, itemSize)
   }
 }
 
@@ -315,10 +316,10 @@ export async function generateGroupAvatar(
   size: number,
   options?: GenerateGroupAvatarOptions<'file'>,
 ): Promise<File>
-export async function generateGroupAvatar(
+export async function generateGroupAvatar<T extends GenerateGroupAvatarType>(
   avatars: (string | HTMLImageElement)[],
   size: number,
-  options?: GenerateGroupAvatarOptions<GenerateGroupAvatarType>,
+  options?: GenerateGroupAvatarOptions<T>,
 ): Promise<HTMLCanvasElement | string | Blob | File> {
   const {
     type = 'file',
