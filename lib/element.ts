@@ -3,6 +3,7 @@ import { customElement, property } from 'lit/decorators.js'
 import * as QRCode from './core/qrcode'
 import { INNER, type InnerState } from './inner'
 import { loadImage } from './utils/image'
+import { drawQRCode } from './utils/qrcode'
 
 /**
  * a simple qrcode component
@@ -253,105 +254,12 @@ export class XHQRCodeElement extends LitElement {
     }
 
     const symbol = this[INNER].symbol!
-    const matrixSize = symbol.modules.size
 
-    // 创建一个二维数组来标记已处理的模块
-    const processed: boolean[][] = Array(matrixSize)
-    for (let i = 0; i < matrixSize; i++) {
-      processed[i] = Array(matrixSize).fill(false)
-    }
-
-    // 绘制二维码
-    this[INNER].ctx.fillStyle = this.color
-    for (let row = 0; row < matrixSize; row++) {
-      for (let col = 0; col < matrixSize; col++) {
-        // 如果模块为黑色且未被处理过
-        if (symbol.modules.get(row, col) && !processed[row][col]) {
-          // 使用 flood fill 算法找到所有相连的模块
-          const connectedModules = this.__findConnectedModules(
-            symbol.modules,
-            processed,
-            row,
-            col,
-            matrixSize,
-          )
-
-          // 为这些连接的模块创建路径并绘制
-          this.__drawConnectedModules(connectedModules, area)
-        }
-      }
-    }
+    drawQRCode(symbol, area.x, area.y, area.pixelsize, this[INNER].ctx, this.color)
 
     if (this.logo) {
       this.__drawLogo()
     }
-  }
-
-  /**
-   * 使用 flood fill 算法查找连接的模块
-   */
-  private __findConnectedModules(
-    modules: any,
-    processed: boolean[][],
-    startRow: number,
-    startCol: number,
-    matrixSize: number,
-  ): Array<{ row: number; col: number }> {
-    const connected: Array<{ row: number; col: number }> = []
-    const queue: Array<{ row: number; col: number }> = [{ row: startRow, col: startCol }]
-    processed[startRow][startCol] = true
-
-    // 四个方向：上、右、下、左
-    const directions = [
-      [-1, 0],
-      [0, 1],
-      [1, 0],
-      [0, -1],
-    ]
-
-    while (queue.length > 0) {
-      const { row, col } = queue.shift()!
-      connected.push({ row, col })
-
-      // 检查四个方向的邻居
-      for (const [dr, dc] of directions) {
-        const newRow = row + dr
-        const newCol = col + dc
-
-        // 检查边界和条件
-        if (
-          newRow >= 0 &&
-          newRow < matrixSize &&
-          newCol >= 0 &&
-          newCol < matrixSize &&
-          modules.get(newRow, newCol) &&
-          !processed[newRow][newCol]
-        ) {
-          processed[newRow][newCol] = true
-          queue.push({ row: newRow, col: newCol })
-        }
-      }
-    }
-
-    return connected
-  }
-
-  /**
-   * 绘制连接的模块组
-   */
-  private __drawConnectedModules(modules: Array<{ row: number; col: number }>, area: any): void {
-    // 创建路径
-    this[INNER].ctx.beginPath()
-
-    // 为每个模块创建矩形路径
-    for (const module of modules) {
-      const x = area.x + module.col * area.pixelsize
-      const y = area.y + module.row * area.pixelsize
-      this[INNER].ctx.rect(x, y, area.pixelsize, area.pixelsize)
-    }
-
-    // 填充路径
-    this[INNER].ctx.fill()
   }
 
   /**
