@@ -4,6 +4,7 @@ import { generateGroupAvatar } from '../lib/utils/group-avatar'
 
 async function appendGroupAvatars() {
   const container = document.querySelector('.example-group-avatar') as HTMLElement
+  if (!container) return
   const size = 80
 
   const avatars = Array(15)
