@@ -7,21 +7,13 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>xh-qrcode</title>
   <link rel="stylesheet" href="./src/index.css" />
-  <script type="module" src="/src/main.ts"></script>
 </head>
 
 <body>
   <div class="dev-qrcode">
-    <!-- <xh-qrcode
-        value="hello world!"
-        logo="./src/assets/vite.svg"
-        errorcorrectionlevel="H"
-        size="160"
-      >
-      </xh-qrcode> -->
-    <xh-group-qrcode value="大苏打的飞洒飞洒放入冬瓜把电话给他电话然后他你好" groupname="群聊：相亲相爱一家人" logo="./src/assets/vite.svg"
-      errorcorrectionlevel="H" tips="该二维码7天内(2月30日前)有效，重新进入将更新" logoscale="0.2"
-      groupAvatars='["/src/assets/avatars/1.jpg", "/src/assets/avatars/2.jpg", "/src/assets/avatars/3.jpg", "/src/assets/avatars/4.jpg", "/src/assets/avatars/5.jpg", "/src/assets/avatars/6.jpg", "/src/assets/avatars/7.jpg", "/src/assets/avatars/8.jpg", "/src/assets/avatars/9.jpg"]' />
+    <xh-qrcode value="hello world!" logo="./src/assets/vite.svg" errorcorrectionlevel="H" size="160">
+    </xh-qrcode>
+
   </div>
 
   <div class="examples">
@@ -63,7 +55,19 @@
         <span style="background: pink; padding: 4px; border-radius: 4px">Mask Content</span>
       </xh-qrcode>
     </div>
+    <div class="example-item">
+      <h3>群头像</h3>
+      <div class="example-group-avatar"></div>
+    </div>
+    <div class="example-item">
+      <h3>群二维码</h3>
+      <xh-group-qrcode value="大苏打的飞洒飞洒放入冬瓜把电话给他电话然后他你好" width="300" groupname="群聊：相亲相爱一家人" logo="./src/assets/vite.svg"
+        errorcorrectionlevel="H" tips="该二维码7天内(2月30日前)有效，重新进入将更新" logoscale="0.2"
+        groupAvatars='["/src/assets/avatars/1.jpg", "/src/assets/avatars/2.jpg", "/src/assets/avatars/3.jpg", "/src/assets/avatars/4.jpg", "/src/assets/avatars/5.jpg", "/src/assets/avatars/6.jpg", "/src/assets/avatars/7.jpg", "/src/assets/avatars/8.jpg", "/src/assets/avatars/9.jpg"]' />
+    </div>
   </div>
+
+  <script type="module" src="/src/main.ts"></script>
 </body>
 
 </html>

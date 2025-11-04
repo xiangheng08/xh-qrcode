@@ -299,6 +299,11 @@ export interface GenerateGroupAvatarOptions<T extends GenerateGroupAvatarType>
 export async function generateGroupAvatar(
   avatars: (string | HTMLImageElement)[],
   size: number,
+  options?: GenerateGroupAvatarOptions<'file'>,
+): Promise<File>
+export async function generateGroupAvatar(
+  avatars: (string | HTMLImageElement)[],
+  size: number,
   options?: GenerateGroupAvatarOptions<'canvas'>,
 ): Promise<HTMLCanvasElement>
 export async function generateGroupAvatar(
@@ -311,11 +316,6 @@ export async function generateGroupAvatar(
   size: number,
   options?: GenerateGroupAvatarOptions<'blob'>,
 ): Promise<Blob>
-export async function generateGroupAvatar(
-  avatars: (string | HTMLImageElement)[],
-  size: number,
-  options?: GenerateGroupAvatarOptions<'file'>,
-): Promise<File>
 export async function generateGroupAvatar<T extends GenerateGroupAvatarType>(
   avatars: (string | HTMLImageElement)[],
   size: number,
