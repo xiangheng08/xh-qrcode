@@ -11,7 +11,7 @@
 
 <body>
   <div class="dev-qrcode">
-    <xh-qrcode value="hello world!" logo="./src/assets/vite.svg" errorcorrectionlevel="H" size="160">
+    <xh-qrcode value="hello world!" logo="./src/assets/vite.svg" errorcorrectionlevel="H" size="160" shape="circle">
     </xh-qrcode>
 
   </div>
@@ -61,9 +61,13 @@
     </div>
     <div class="example-item">
       <h3>群二维码</h3>
-      <xh-group-qrcode value="大苏打的飞洒飞洒放入冬瓜把电话给他电话然后他你好" width="300" groupname="群聊：相亲相爱一家人" logo="./src/assets/vite.svg"
-        errorcorrectionlevel="H" tips="该二维码7天内(2月30日前)有效，重新进入将更新" logoscale="0.2"
+      <xh-group-qrcode value="https://example.com/group?id=cXJjb2Rl" width="300" groupname="群聊：相亲相爱一家人"
+        logo="./src/assets/vite.svg" errorcorrectionlevel="H" tips="该二维码7天内(2月30日前)有效，重新进入将更新" logoscale="0.2"
         groupAvatars='["/src/assets/avatars/1.jpg", "/src/assets/avatars/2.jpg", "/src/assets/avatars/3.jpg", "/src/assets/avatars/4.jpg", "/src/assets/avatars/5.jpg", "/src/assets/avatars/6.jpg", "/src/assets/avatars/7.jpg", "/src/assets/avatars/8.jpg", "/src/assets/avatars/9.jpg"]' />
+    </div>
+    <div class="example-item">
+      <h3>形状：圆点</h3>
+      <xh-qrcode value="https://example.com/group?id=cXJjb2Rl" shape="circle"></xh-qrcode>
     </div>
   </div>
 

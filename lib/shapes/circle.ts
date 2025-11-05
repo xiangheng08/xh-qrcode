@@ -40,7 +40,8 @@ function drawQRCode(config: DrawQRCodeConfig) {
         const px = x + col * pixelSize + pixelSize / 2
         const py = y + row * pixelSize + pixelSize / 2
         ctx.beginPath()
-        ctx.arc(px, py, pixelSize / 2, 0, Math.PI * 2)
+        // 绘制圆点同时减去圆点半径的 5%，让圆点之间有间隙
+        ctx.arc(px, py, pixelSize / 2 - pixelSize * 0.05, 0, Math.PI * 2)
         ctx.fill()
       }
     }
