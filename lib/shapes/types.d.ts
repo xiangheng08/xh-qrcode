@@ -9,4 +9,4 @@ export interface DrawQRCodeConfig {
   ctx: CanvasRenderingContext2D
 }
 
-export type QRCodeShape = 'normal' | 'circle'
+export type QRCodeShape = 'normal' | 'circle' | 'round'

@@ -279,6 +279,9 @@ export class XHQRCodeElement extends LitElement {
       case 'circle':
         shapes.circle(config)
         break
+      case 'round':
+        shapes.round(config)
+        break
       default:
         shapes.normal(config)
         break
