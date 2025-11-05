@@ -3,7 +3,8 @@ import { customElement, property } from 'lit/decorators.js'
 import * as QRCode from './core/qrcode'
 import { INNER, type InnerState } from './inner'
 import { loadImage } from './utils/image'
-import { drawQRCode } from './utils/qrcode'
+import * as shapes from './shapes'
+import type { DrawQRCodeConfig, QRCodeShape } from './shapes'
 
 /**
  * a simple qrcode component
@@ -24,6 +25,7 @@ export class XHQRCodeElement extends LitElement {
     'logo',
     'logoScale',
     'logoPadding',
+    'shape',
   ]
 
   /**
@@ -109,6 +111,12 @@ export class XHQRCodeElement extends LitElement {
    */
   @property({ type: Boolean })
   resizeRedraw = true
+
+  /**
+   * 形状
+   */
+  @property()
+  shape: QRCodeShape = 'normal'
 
   /**
    * 内部状态
@@ -255,7 +263,26 @@ export class XHQRCodeElement extends LitElement {
 
     const symbol = this[INNER].symbol!
 
-    drawQRCode(symbol, area.x, area.y, area.pixelsize, this[INNER].ctx, this.color)
+    const config: DrawQRCodeConfig = {
+      symbol,
+      x: area.x,
+      y: area.y,
+      pixelSize: area.pixelsize,
+      style: this.color,
+      ctx: this[INNER].ctx,
+    }
+
+    switch (this.shape) {
+      case 'normal':
+        shapes.normal(config)
+        break
+      case 'circle':
+        shapes.circle(config)
+        break
+      default:
+        shapes.normal(config)
+        break
+    }
 
     if (this.logo) {
       this.__drawLogo()
