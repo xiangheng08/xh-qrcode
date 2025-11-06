@@ -83,6 +83,7 @@ export class XHQRCodeGroupElement extends XHQRCodeElement {
     'tipsFont',
     'qrcodeScale',
   ]
+
   /**
    * 群二维码宽度
    */
@@ -174,11 +175,11 @@ export class XHQRCodeGroupElement extends XHQRCodeElement {
   groupName = ''
 
   /**
-   * 群头像字体
+   * 群名称字体
    */
   @property()
   groupNameFont =
-    '{0.044}px "Punctuation SC", "Inter", ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji"'
+    '{0.048}px "Punctuation SC", "Inter", ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji"'
 
   /**
    * 群名称颜色
@@ -286,9 +287,6 @@ export class XHQRCodeGroupElement extends XHQRCodeElement {
     const size = this[INNER].groupAvatarSize!
     const x = this[INNER].groupAvatarX!
     const y = this[INNER].groupAvatarY!
-
-    this[INNER].ctx.fillStyle = this.background
-    this[INNER].ctx.fillRect(x, y, size, size)
 
     if (this[INNER].groupAvatarImage) {
       this[INNER].ctx.drawImage(this[INNER].groupAvatarImage, x, y, size, size)

@@ -19,7 +19,7 @@ function drawQRCode(config: DrawQRCodeConfig) {
   ctx.strokeStyle = style
 
   const HPS = pixelSize / 2
-  const PS = pixelSize * 0.05
+  const PS = pixelSize * 0.1
 
   // 绘制三个定位点
   for (const [cx, cy] of FPS_CENTERS) {

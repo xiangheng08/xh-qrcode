@@ -245,6 +245,7 @@ export class XHQRCodeElement extends LitElement {
       errorCorrectionLevel: this.errorCorrectionLevel,
       version: this.version,
     })
+    return this[INNER].symbol
   }
 
   /**
