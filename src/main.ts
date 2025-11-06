@@ -1,5 +1,6 @@
 import '../lib/main'
 import '../lib/elements/group'
+import '../lib/elements/vcard'
 import { generateGroupAvatar } from '../lib/utils/group-avatar'
 
 async function appendGroupAvatars() {

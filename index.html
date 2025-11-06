@@ -11,9 +11,12 @@
 
 <body>
   <div class="dev-qrcode">
-    <xh-qrcode value="hello world!" logo="./src/assets/vite.svg" errorcorrectionlevel="H" size="160" shape="round">
-    </xh-qrcode>
+    <!-- <xh-qrcode value="hello world!" logo="./src/assets/vite.svg" errorcorrectionlevel="H" size="160" shape="round">
+    </xh-qrcode> -->
 
+    <xh-vcard-qrcode value="https://example.com/u/aGVsbG8gd29ybGQh" errorcorrectionlevel="H" shape="round"
+      logo="./src/assets/vite.svg" avatar="/src/assets/avatars/1.jpg" name="满船清梦压星河" description="冰岛"
+      tips="扫一扫上面的二维码图案，加我为朋友。" />
   </div>
 
   <div class="examples">
@@ -63,7 +66,14 @@
       <h3>群二维码</h3>
       <xh-group-qrcode value="https://example.com/group?id=cXJjb2Rl" width="300" groupname="群聊：相亲相爱一家人"
         logo="./src/assets/vite.svg" errorcorrectionlevel="H" tips="该二维码7天内(2月30日前)有效，重新进入将更新" logoscale="0.2"
+        shape="round"
         groupAvatars='["/src/assets/avatars/1.jpg", "/src/assets/avatars/2.jpg", "/src/assets/avatars/3.jpg", "/src/assets/avatars/4.jpg", "/src/assets/avatars/5.jpg", "/src/assets/avatars/6.jpg", "/src/assets/avatars/7.jpg", "/src/assets/avatars/8.jpg", "/src/assets/avatars/9.jpg"]' />
+    </div>
+    <div class="example-item">
+      <h3>个人名片</h3>
+      <xh-vcard-qrcode value="https://example.com/u/aGVsbG8gd29ybGQh" errorcorrectionlevel="H" shape="round"
+        logo="./src/assets/vite.svg" avatar="/src/assets/avatars/1.jpg" name="满船清梦压星河" description="冰岛"
+        tips="扫一扫上面的二维码图案，加我为朋友。" width="300" />
     </div>
     <div class="example-item">
       <h3>形状：圆点</h3>
