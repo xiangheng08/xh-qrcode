@@ -36,7 +36,7 @@
       "import": "./dist/elements/*.js",
       "require": "./dist/elements/*.cjs"
     },
-    "utils": {
+    "./utils": {
       "types": "./dist/utils/export.d.ts",
       "import": "./dist/utils.js",
       "require": "./dist/utils.cjs"
