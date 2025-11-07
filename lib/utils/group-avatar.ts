@@ -260,7 +260,7 @@ export function calculateGroupAvatarPosition(
   return { itemSize: itemSize, positions }
 }
 
-type GenerateGroupAvatarType = 'canvas' | 'dataURL' | 'blob' | 'file'
+export type GenerateGroupAvatarType = 'canvas' | 'dataURL' | 'blob' | 'file'
 
 export interface GenerateGroupAvatarOptions<T extends GenerateGroupAvatarType>
   extends Omit<DrawGroupAvatarOptions, 'size'> {

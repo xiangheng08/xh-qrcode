@@ -36,6 +36,7 @@ export default defineConfig({
     lib: {
       entry: {
         'xh-qrcode': resolve(__dirname, 'lib/main.ts'),
+        utils: resolve(__dirname, 'lib/utils/export.ts'),
         ...elements,
       },
       name: 'XHQRCode',

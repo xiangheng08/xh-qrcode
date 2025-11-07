@@ -35,6 +35,11 @@
       "types": "./dist/elements/*.d.ts",
       "import": "./dist/elements/*.js",
       "require": "./dist/elements/*.cjs"
+    },
+    "utils": {
+      "types": "./dist/utils/export.d.ts",
+      "import": "./dist/utils.js",
+      "require": "./dist/utils.cjs"
     }
   },
   "scripts": {
