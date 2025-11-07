@@ -47,18 +47,23 @@
     "build": "tsc && vite build",
     "preview": "vite preview",
     "type-check": "tsc --noEmit",
-    "format": "prettier --w lib/ --w src/"
+    "format": "prettier --w lib/ --w src/",
+    "docs:dev": "vitepress dev docs",
+    "docs:build": "vitepress build docs",
+    "docs:preview": "vitepress preview docs"
   },
   "dependencies": {
     "dijkstrajs": "^1.0.3",
     "lit": "^3.3.1"
   },
   "devDependencies": {
+    "@xiangheng08/qrcode": "link:",
     "fast-glob": "^3.3.3",
     "prettier": "^3.6.2",
     "tsx": "^4.20.6",
     "typescript": "~5.9.3",
     "vite": "^7.1.7",
-    "vite-plugin-dts": "^4.5.4"
+    "vite-plugin-dts": "^4.5.4",
+    "vitepress": "2.0.0-alpha.12"
   }
 }

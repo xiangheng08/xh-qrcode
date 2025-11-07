@@ -22,3 +22,5 @@ temp-*
 *.njsproj
 *.sln
 *.sw?
+docs/.vitepress/cache/
+docs/.vitepress/dist/
