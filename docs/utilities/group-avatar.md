@@ -1,31 +1,30 @@
+<script setup>
+import GroupAvatarExample from './group-avatar-example.vue'
+</script>
+
 # 群头像生成工具
 
 群头像生成工具是一个独立的工具函数，用于生成包含多个头像的群组头像图片。这个工具被 [xh-group-qrcode](/components/group) 组件内部使用，但也可以独立使用。
 
-## 安装
-
-群头像生成工具包含在 [@xiangheng08/qrcode](https://github.com/xiangheng08/xh-qrcode) 包中：
-
-```bash
-npm install @xiangheng08/qrcode
-```
+<GroupAvatarExample />
 
 ## 使用方法
 
 ### 导入工具
 
 ```js
-import { drawGroupAvatar } from '@xiangheng08/qrcode/utils'
+import { generateGroupAvatar } from '@xiangheng08/qrcode/utils'
 ```
 
 ### 基本用法
 
 ```js
-import { drawGroupAvatar } from '@xiangheng08/qrcode/utils'
+import { generateGroupAvatar } from '@xiangheng08/qrcode/utils'
 
 const avatarUrls = ['avatar1.jpg', 'avatar2.jpg', 'avatar3.jpg', 'avatar4.jpg']
 
 const options = {
+  type: 'canvas'
   size: 200,
   gap: 2,
   padding: 4,
@@ -34,7 +33,7 @@ const options = {
   fit: 'cover',
 }
 
-drawGroupAvatar(avatarUrls, options)
+generateGroupAvatar(avatarUrls, options)
   .then((canvas) => {
     // 使用生成的 canvas
     document.body.appendChild(canvas)
@@ -89,9 +88,10 @@ drawGroupAvatar(avatarUrls, options)
 ### 基本使用
 
 ```js
-import { drawGroupAvatar } from '@xiangheng08/qrcode/utils'
+import { generateGroupAvatar } from '@xiangheng08/qrcode/utils'
 
-const canvas = await drawGroupAvatar(['avatar1.jpg', 'avatar2.jpg', 'avatar3.jpg'], {
+const canvas = await generateGroupAvatar(['avatar1.jpg', 'avatar2.jpg', 'avatar3.jpg'], {
+  type: 'canvas'
   size: 100,
   gap: 2,
   padding: 4,
@@ -104,13 +104,13 @@ const canvas = await drawGroupAvatar(['avatar1.jpg', 'avatar2.jpg', 'avatar3.jpg
 
 ```jsx
 import { useState, useEffect } from 'react'
-import { drawGroupAvatar } from '@xiangheng08/qrcode/utils'
+import { generateGroupAvatar } from '@xiangheng08/qrcode/utils'
 
 function GroupAvatar({ avatarUrls }) {
   const [avatarUrl, setAvatarUrl] = useState('')
 
   useEffect(() => {
-    drawGroupAvatar(avatarUrls, { size: 100 })
+    generateGroupAvatar(avatarUrls, { type: 'canvas', size: 100 })
       .then((canvas) => {
         setAvatarUrl(canvas.toDataURL())
       })
@@ -133,7 +133,7 @@ function GroupAvatar({ avatarUrls }) {
 
 <script setup>
 import { ref, watch } from 'vue'
-import { drawGroupAvatar } from '@xiangheng08/qrcode/utils'
+import { generateGroupAvatar } from '@xiangheng08/qrcode/utils'
 
 const props = defineProps({
   avatarUrls: Array,
@@ -145,7 +145,7 @@ watch(
   () => props.avatarUrls,
   (newUrls) => {
     if (newUrls && newUrls.length > 0) {
-      drawGroupAvatar(newUrls, { size: 100 })
+      generateGroupAvatar(newUrls, { size: 100, type: 'canvas' })
         .then((canvas) => {
           avatarUrl.value = canvas.toDataURL()
         })
@@ -171,7 +171,7 @@ watch(
 
 ```js
 try {
-  const canvas = await drawGroupAvatar(avatarUrls, options)
+  const canvas = await generateGroupAvatar(avatarUrls, options)
   // 处理成功结果
 } catch (error) {
   // 处理错误情况

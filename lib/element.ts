@@ -435,6 +435,9 @@ export class XHQRCodeElement extends LitElement {
   static styles = css`
     :host {
       position: relative;
+      display: flex;
+      width: fit-content;
+      height: fit-content;
     }
 
     canvas {

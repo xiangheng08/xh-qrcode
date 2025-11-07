@@ -31,10 +31,15 @@
       "import": "./dist/xh-qrcode.js",
       "require": "./dist/xh-qrcode.cjs"
     },
-    "./elements/*": {
-      "types": "./dist/elements/*.d.ts",
-      "import": "./dist/elements/*.js",
-      "require": "./dist/elements/*.cjs"
+    "./elements/group": {
+      "types": "./dist/elements/group.d.ts",
+      "import": "./dist/elements/group.js",
+      "require": "./dist/elements/group.cjs"
+    },
+    "./elements/vcard": {
+      "types": "./dist/elements/vcard.d.ts",
+      "import": "./dist/elements/vcard.js",
+      "require": "./dist/elements/vcard.cjs"
     },
     "./utils": {
       "types": "./dist/utils/export.d.ts",
@@ -64,6 +69,7 @@
     "typescript": "~5.9.3",
     "vite": "^7.1.7",
     "vite-plugin-dts": "^4.5.4",
-    "vitepress": "2.0.0-alpha.12"
+    "vitepress": "2.0.0-alpha.12",
+    "vue": "^3.5.24"
   }
 }

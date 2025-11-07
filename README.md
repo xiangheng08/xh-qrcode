@@ -252,6 +252,6 @@ The code in the [lib/core](https://github.com/xiangheng08/xh-qrcode/tree/HEAD/li
 
 ### Avatars
 
-[src/assets/avatars](https://github.com/xiangheng08/xh-qrcode/tree/HEAD/src/assets/avatars) 目录下的头像来源于[头像库](https://www.tuxiangyan.com/)。
+[src/assets/avatars](https://github.com/xiangheng08/xh-qrcode/tree/HEAD/src/assets/avatars)、[docs/public/images/avatars](https://github.com/xiangheng08/xh-qrcode/tree/HEAD/docs/public/images/avatars) 目录下的头像来源于[头像库](https://www.tuxiangyan.com/)。
 
-[src/assets/avatars](https://github.com/xiangheng08/xh-qrcode/tree/HEAD/src/assets/avatars) 目录下的头像仅用于学习/展示，本项目不将其用于商业用途。其他使用者请注意：从本仓库获取的这些头像请勿随意使用，若因此造成任何法律风险与本项目和[本项目作者](https://github.com/xiangheng08)无关。
+[src/assets/avatars](https://github.com/xiangheng08/xh-qrcode/tree/HEAD/src/assets/avatars)、[docs/public/images/avatars](https://github.com/xiangheng08/xh-qrcode/tree/HEAD/docs/public/images/avatars) 目录下的头像仅用于学习/展示，本项目不将其用于商业用途。其他使用者请注意：从本仓库获取的这些头像请勿随意使用，若因此造成任何法律风险与本项目和[本项目作者](https://github.com/xiangheng08)无关。
