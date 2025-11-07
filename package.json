@@ -44,9 +44,9 @@
   },
   "scripts": {
     "dev": "vite",
-    "build": "tsc && vite build",
+    "build": "tsc -p tsconfig.lib.json && vite build",
     "preview": "vite preview",
-    "type-check": "tsc --noEmit",
+    "type-check": "tsc -p tsconfig.lib.json --noEmit",
     "format": "prettier --w lib/ --w src/",
     "docs:dev": "vitepress dev docs",
     "docs:build": "vitepress build docs",
