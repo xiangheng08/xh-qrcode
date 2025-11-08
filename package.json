@@ -63,6 +63,7 @@
     "lit": "^3.3.1"
   },
   "devDependencies": {
+    "@types/node": "^24.10.0",
     "@vue/tsconfig": "^0.8.1",
     "@xiangheng08/qrcode": "link:",
     "fast-glob": "^3.3.3",

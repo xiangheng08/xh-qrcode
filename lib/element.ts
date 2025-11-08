@@ -407,8 +407,8 @@ export class XHQRCodeElement extends LitElement {
 
     this[INNER].canvas.width = canvasSize
     this[INNER].canvas.height = canvasSize
-    this[INNER].canvas.style.width = canvasDisplaySize + 'px'
-    this[INNER].canvas.style.height = canvasDisplaySize + 'px'
+    this[INNER].canvas.style.maxWidth = canvasDisplaySize + 'px'
+    this[INNER].canvas.style.maxHeight = canvasDisplaySize + 'px'
 
     this[INNER].ctx.clearRect(0, 0, canvasSize, canvasSize)
 
@@ -436,6 +436,8 @@ export class XHQRCodeElement extends LitElement {
     :host {
       position: relative;
       display: flex;
+      justify-content: center;
+      align-items: center;
       width: fit-content;
       height: fit-content;
     }
@@ -443,6 +445,8 @@ export class XHQRCodeElement extends LitElement {
     canvas {
       image-rendering: pixelated;
       display: block;
+      width: 100%;
+      height: 100%;
     }
 
     .mask {
