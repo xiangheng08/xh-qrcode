@@ -31,6 +31,11 @@
       "import": "./dist/xh-qrcode.js",
       "require": "./dist/xh-qrcode.cjs"
     },
+    "./utils": {
+      "types": "./dist/utils/export.d.ts",
+      "import": "./dist/utils.js",
+      "require": "./dist/utils.cjs"
+    },
     "./elements/group": {
       "types": "./dist/elements/group.d.ts",
       "import": "./dist/elements/group.js",
@@ -40,11 +45,6 @@
       "types": "./dist/elements/vcard.d.ts",
       "import": "./dist/elements/vcard.js",
       "require": "./dist/elements/vcard.cjs"
-    },
-    "./utils": {
-      "types": "./dist/utils/export.d.ts",
-      "import": "./dist/utils.js",
-      "require": "./dist/utils.cjs"
     }
   },
   "scripts": {
@@ -55,13 +55,15 @@
     "format": "prettier --w lib/ --w src/",
     "docs:dev": "vitepress dev docs",
     "docs:build": "vitepress build docs",
-    "docs:preview": "vitepress preview docs"
+    "docs:preview": "vitepress preview docs",
+    "docs:type-check": "tsc -p tsconfig.docs.json"
   },
   "dependencies": {
     "dijkstrajs": "^1.0.3",
     "lit": "^3.3.1"
   },
   "devDependencies": {
+    "@vue/tsconfig": "^0.8.1",
     "@xiangheng08/qrcode": "link:",
     "fast-glob": "^3.3.3",
     "prettier": "^3.6.2",
