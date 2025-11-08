@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { onMounted, ref } from 'vue'
-import { generateGroupAvatar } from '@xiangheng08/qrcode/utils'
+import { generateGroupAvatar } from '../../lib/utils/group-avatar'
 
 const containerRef = ref<HTMLDivElement>()
 const size = 80
