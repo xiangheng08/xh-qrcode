@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { onMounted, ref } from 'vue'
+import { onMounted, onUnmounted, ref } from 'vue'
 
 const steps: Record<string, any>[] = [
   { errorcorrectionlevel: 'Q' },
@@ -18,9 +18,10 @@ const steps: Record<string, any>[] = [
 
 const index = ref(0)
 let ms = 300
+let timer: ReturnType<typeof setTimeout>
 
 const next = () => {
-  setTimeout(() => {
+  timer = setTimeout(() => {
     index.value++
     ms -= 15
     if (index.value < steps.length - 1) {
@@ -31,6 +32,10 @@ const next = () => {
 
 onMounted(() => {
   next()
+})
+
+onUnmounted(() => {
+  clearTimeout(timer)
 })
 </script>
 
