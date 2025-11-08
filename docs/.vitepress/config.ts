@@ -1,9 +1,15 @@
 import { defineConfig } from 'vitepress'
+import { fileURLToPath } from 'node:url'
+import { dirname, join } from 'node:path'
+
+const __dirname = dirname(fileURLToPath(import.meta.url))
 
 // https://vitepress.dev/reference/site-config
 export default defineConfig({
   title: '@xiangheng08/qrcode',
   description: '一个基于 Web Components 的轻量级二维码生成器',
+  base: '/xh-qrcode/',
+  head: [['link', { rel: 'icon', href: '/xh-qrcode/logo.svg' }]],
   themeConfig: {
     // https://vitepress.dev/reference/default-theme-config
     nav: [
@@ -36,7 +42,17 @@ export default defineConfig({
       },
     ],
 
-    socialLinks: [{ icon: 'github', link: 'https://github.com/xiangheng08/xh-qrcode' }],
+    socialLinks: [
+      { icon: 'github', link: 'https://github.com/xiangheng08/xh-qrcode' },
+      { icon: 'npm', link: 'https://www.npmjs.com/package/@xiangheng08/qrcode' },
+    ],
+  },
+  vite: {
+    resolve: {
+      alias: {
+        '@theme': join(__dirname, 'theme'),
+      },
+    },
   },
   vue: {
     template: {

@@ -6,6 +6,9 @@ hero:
   name: '@xiangheng08/qrcode'
   text: '一个基于 Web Components 的轻量级二维码生成器'
   tagline: 基于 Lit 和 TypeScript 构建，支持多种二维码样式和功能
+  image:
+    src: /images/vite.svg
+    alt: VitePress
   actions:
     - theme: brand
       text: 快速开始
@@ -28,3 +31,9 @@ features:
   - title: 🔧 易于使用
     details: 简单的 API 设计，通过 HTML 属性即可完成配置
 ---
+
+<script setup>
+  import HomeDynamicQRCode from '@theme/components/HomeDynamicQRCode.vue'
+</script>
+
+<HomeDynamicQRCode />

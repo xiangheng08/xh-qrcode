@@ -151,7 +151,13 @@
 <xh-qrcode class="custom-qrcode" value="Custom Style" mask></xh-qrcode>
 ```
 
-<xh-qrcode class="custom-qrcode" value="Custom Style" mask style="--mask-color: rgba(0, 0, 0, 0.8);"></xh-qrcode>
+<xh-qrcode class="custom-qrcode" value="Custom Style" mask></xh-qrcode>
+
+<style>
+  .custom-qrcode {
+    --mask-color: rgba(0, 0, 0, 0.8);
+  }
+</style>
 
 ## 事件
 
