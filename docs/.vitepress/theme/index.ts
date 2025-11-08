@@ -6,9 +6,9 @@ export default {
   enhanceApp() {
     if (!import.meta.env.SSR) {
       // 引入组件
-      import('@xiangheng08/qrcode')
-      import('@xiangheng08/qrcode/elements/vcard')
-      import('@xiangheng08/qrcode/elements/group')
+      import('../../../lib/main')
+      import('../../../lib/elements/vcard')
+      import('../../../lib/elements/group')
     }
   },
 } satisfies Theme

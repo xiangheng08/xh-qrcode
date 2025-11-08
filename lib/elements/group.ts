@@ -272,9 +272,15 @@ export class XHQRCodeGroupElement extends XHQRCodeElement {
       this[INNER].groupAvatarImages = void 0
       this.__drawGroupAvatar()
     } else if (this.groupAvatars && this.groupAvatars.length > 0) {
+      let groupAvatars = this.groupAvatars
+      if (typeof this.groupAvatars === 'string') {
+        // 如果是字符串，则尝试解析为数组
+        groupAvatars = JSON.parse(this.groupAvatars)
+      }
+
       this[INNER].groupAvatarImages = []
-      for (let i = 0; i < this.groupAvatars.length; i++) {
-        this[INNER].groupAvatarImages[i] = await loadImage(this.groupAvatars[i], {
+      for (let i = 0; i < groupAvatars.length; i++) {
+        this[INNER].groupAvatarImages[i] = await loadImage(groupAvatars[i], {
           crossOrigin: 'anonymous',
         })
       }

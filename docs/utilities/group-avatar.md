@@ -10,37 +10,15 @@ import GroupAvatarExample from './group-avatar-example.vue'
 
 ## 使用方法
 
-### 导入工具
-
-```js
-import { generateGroupAvatar } from '@xiangheng08/qrcode/utils'
-```
-
-### 基本用法
-
 ```js
 import { generateGroupAvatar } from '@xiangheng08/qrcode/utils'
 
 const avatarUrls = ['avatar1.jpg', 'avatar2.jpg', 'avatar3.jpg', 'avatar4.jpg']
 
-const options = {
-  type: 'canvas'
-  size: 200,
-  gap: 2,
-  padding: 4,
-  radius: 10,
-  background: '#dddddd',
-  fit: 'cover',
-}
-
-generateGroupAvatar(avatarUrls, options)
+generateGroupAvatar(avatarUrls, 200, { type: 'canvas' })
   .then((canvas) => {
     // 使用生成的 canvas
     document.body.appendChild(canvas)
-
-    // 或者转换为 data URL
-    const dataUrl = canvas.toDataURL()
-    console.log(dataUrl)
   })
   .catch((error) => {
     console.error('生成群头像失败:', error)
@@ -53,19 +31,20 @@ generateGroupAvatar(avatarUrls, options)
 
 类型: `string[]`
 
-头像图片的 URL 数组。支持最多 4 个头像。
+头像图片的 URL 数组。支持最多 9 个头像。
 
 ### options
 
-| 属性          | 类型   | 默认值    | 描述                                      |
-| ------------- | ------ | --------- | ----------------------------------------- |
-| size          | number | 200       | 生成的头像画布大小（像素）                |
-| gap           | number | 0         | 头像之间的间隔（像素）                    |
-| padding       | number | 0         | 内边距（像素）                            |
-| radius        | number | 0         | 头像圆角半径（像素）                      |
-| background    | string | '#dddddd' | 背景颜色                                  |
-| fit           | string | 'cover'   | 图片适应方式 ('cover', 'contain', 'fill') |
-| defaultAvatar | string | undefined | 默认头像 URL                              |
+| 属性          | 类型                                 | 默认值      | 描述                                  |
+| ------------- | ------------------------------------ | ----------- | ------------------------------------- |
+| type          | `canvas/dataURL/blob/file`           | `'file'`    | 生成的头像图片类型。                  |
+| defaultAvatar | `string/HTMLImageElement`            |             | 默认头像                              |
+| background    | `string`                             | `'#dddddd'` | 背景颜色                              |
+| fit           | `cover/contain/fill/none/scale-down` | `'cover'`   | 图片适应方式                          |
+| radius        | `number`                             | `0.072`     | 头像圆角半径（0-1，相对于头像大小）   |
+| gap           | `number`                             | `0.035`     | 头像之间的间隔（0-1，相对于头像大小） |
+| padding       | `number`                             | `0.04`      | 内边距（0-1，相对于头像大小）         |
+| defaultAvatar | `string`                             | `undefined` | 默认头像 URL                          |
 
 ## 图片适应方式
 
@@ -73,15 +52,7 @@ generateGroupAvatar(avatarUrls, options)
 - `contain`: 保持宽高比，缩放图片以完整显示在容器内
 - `fill`: 拉伸图片以完全填充容器
 
-## 组合规则
-
-头像组合遵循以下规则：
-
-1. **1个头像**：居中显示完整头像
-2. **2个头像**：水平排列，各占50%空间
-3. **3个头像**：上方一个，下方两个的三角形排列
-4. **4个头像**：2x2网格排列
-5. **更多头像**：只显示前4个，按2x2网格排列
+与 [`object-fit`](https://developer.mozilla.org/zh-CN/docs/Web/CSS/Reference/Properties/object-fit) 行为一致
 
 ## 示例
 
@@ -90,14 +61,11 @@ generateGroupAvatar(avatarUrls, options)
 ```js
 import { generateGroupAvatar } from '@xiangheng08/qrcode/utils'
 
-const canvas = await generateGroupAvatar(['avatar1.jpg', 'avatar2.jpg', 'avatar3.jpg'], {
-  type: 'canvas'
-  size: 100,
-  gap: 2,
-  padding: 4,
-  radius: 8,
-  background: '#f0f0f0',
-})
+const avatarUrls = ['avatar1.jpg', 'avatar2.jpg', 'avatar3.jpg']
+
+const file = await generateGroupAvatar(avatarUrls, 100)
+
+console.log(file)
 ```
 
 ### 在 React 中使用
@@ -110,9 +78,9 @@ function GroupAvatar({ avatarUrls }) {
   const [avatarUrl, setAvatarUrl] = useState('')
 
   useEffect(() => {
-    generateGroupAvatar(avatarUrls, { type: 'canvas', size: 100 })
-      .then((canvas) => {
-        setAvatarUrl(canvas.toDataURL())
+    generateGroupAvatar(avatarUrls, 100, { type: 'dataURL' })
+      .then((dataURL) => {
+        setAvatarUrl(dataURL)
       })
       .catch((error) => {
         console.error('生成群头像失败:', error)
@@ -145,9 +113,13 @@ watch(
   () => props.avatarUrls,
   (newUrls) => {
     if (newUrls && newUrls.length > 0) {
-      generateGroupAvatar(newUrls, { size: 100, type: 'canvas' })
-        .then((canvas) => {
-          avatarUrl.value = canvas.toDataURL()
+      generateGroupAvatar(newUrls, 100, { type: 'blob' })
+        .then((blob) => {
+          if (avatarUrl.value) {
+            // 释放内存
+            URL.revokeObjectURL(avatarUrl.value)
+          }
+          avatarUrl.value = URL.createObjectURL(blob)
         })
         .catch((error) => {
           console.error('生成群头像失败:', error)
@@ -156,6 +128,11 @@ watch(
   },
   { immediate: true },
 )
+
+onUnmounted(() => {
+  // 释放内存
+  URL.revokeObjectURL(avatarUrl.value)
+})
 </script>
 ```
 

@@ -13,7 +13,7 @@ onMounted(async () => {
   for (let i = 0; i < 9; i++) {
     const _avatars: string[] = []
     while (_avatars.length < i + 1) {
-      const v = avatars[random(0, avatars.length - 1)]
+      const v = avatars[random(0, avatars.length - 1)] as string
       // 避免重复
       if (_avatars.includes(v)) continue
       _avatars.push(v)
