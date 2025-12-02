@@ -1,3 +1,7 @@
+---
+outline: deep
+---
+
 # 群二维码 (xh-group-qrcode)
 
 群二维码组件用于为群聊生成带有群头像和群名称的二维码，支持单个头像和多个头像组合。
@@ -51,6 +55,56 @@
   shape="round"
   logo="../images/vite.svg"
 />
+
+::: warning 注意
+在 Vue / React 中设置 `groupAvatars` 属性时，如果时直接操作元素实例可以直接赋值，如果是在模板中，需要转为 JSON 字符串。
+
+以下是 Vue 示例，React 同理。
+
+<!-- prettier-ignore -->
+```vue
+<template>
+  <!-- 错误 -->
+  <xh-group-qrcode
+    ...
+    :groupAvatars="groupAvatars"
+  />
+
+  <!-- 正确 -->
+  <xh-group-qrcode
+    ref="el"
+    ...
+    :groupAvatars="JSON.stringify(groupAvatars)"
+  />
+</template>
+
+<script setup>
+import { ref } from 'vue';
+import { XHQRCodeGroupElement } from '@xiangheng08/qrcode/elements/group'
+
+const el = ref<XHQRCodeGroupElement>()
+
+const groupAvatars = [
+	'/images/avatars/1.jpg',
+	'/images/avatars/2.jpg',
+	'/images/avatars/3.jpg',
+	'/images/avatars/4.jpg',
+	'/images/avatars/5.jpg',
+	'/images/avatars/6.jpg',
+	'/images/avatars/7.jpg',
+	'/images/avatars/8.jpg',
+	'/images/avatars/9.jpg',
+];
+
+onMounted(() => {
+  if (!el.value) return
+  // 直接对元素实例属性则不需要转换为 JSON 
+  el.value.groupAvatars = groupAvatars
+})
+</script>
+```
+
+:::
 
 ## 属性 (Attributes)
 

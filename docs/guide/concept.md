@@ -35,6 +35,9 @@
 
 1. 若需在二维码上添加logo，建议选用H级别的纠错码，这样即使logo覆盖了一定比例的二维码区域，也不会影响扫码识别的准确性。
 2. 如果你的链接中包含中文或者其他语言文字，建议使用UTF-8编码，并使用URL编码。
+   ```
+   https://www.google.com/search?q=天气 -> https://www.google.com/search?q=%E5%A4%A9%E6%B0%94
+   ```
 
 ## 相关链接
 

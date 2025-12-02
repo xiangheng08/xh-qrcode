@@ -1,3 +1,7 @@
+---
+outline: deep
+---
+
 # 基础二维码 (xh-qrcode)
 
 基础二维码组件是最核心的组件，可用于生成标准的二维码。
@@ -104,16 +108,18 @@
 
 <xh-qrcode value="Custom Mask Color" mask maskColor="rgba(0, 0, 0, 0.8)"></xh-qrcode>
 
-### 带遮罩层内容
+### 自定义遮罩层内容
 
 ```html
 <xh-qrcode value="With Mask Content" mask>
-  <span style="background: pink; padding: 4px; border-radius: 4px">Mask Content</span>
+  <span style="background: pink; padding: 4px; border-radius: 4px; color: white;">
+    Mask Content
+  </span>
 </xh-qrcode>
 ```
 
 <xh-qrcode value="With Mask Content" mask>
-  <span style="background: pink; padding: 4px; border-radius: 4px">Mask Content</span>
+  <span style="background: pink; padding: 4px; border-radius: 4px; color: white">Mask Content</span>
 </xh-qrcode>
 
 ### 不同形状
