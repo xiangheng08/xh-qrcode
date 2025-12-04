@@ -6,15 +6,15 @@
 
 ::: code-group
 
-```bash
+```bash [npm]
 npm install @xiangheng08/qrcode
 ```
 
-```bash
+```bash [yarn]
 yarn add @xiangheng08/qrcode
 ```
 
-```bash
+```bash [pnpm]
 pnpm add @xiangheng08/qrcode
 ```
 
@@ -40,7 +40,7 @@ import '@xiangheng08/qrcode'
 
 ```js
 // 导入基础二维码组件
-import '@xiangheng08/qrcode/elements/xh-qrcode'
+import '@xiangheng08/qrcode'
 
 // 导入个人名片二维码组件
 import '@xiangheng08/qrcode/elements/vcard'

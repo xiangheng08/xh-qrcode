@@ -1,6 +1,7 @@
 import { defineConfig } from 'vitepress'
 import { fileURLToPath } from 'node:url'
 import { dirname, join } from 'node:path'
+import { groupIconMdPlugin, groupIconVitePlugin } from 'vitepress-plugin-group-icons'
 
 const __dirname = dirname(fileURLToPath(import.meta.url))
 
@@ -10,6 +11,7 @@ export default defineConfig({
   description: '一个基于 Web Components 的轻量级二维码生成器',
   base: '/xh-qrcode/',
   head: [['link', { rel: 'icon', href: '/xh-qrcode/logo.svg' }]],
+  cleanUrls: true,
   themeConfig: {
     // https://vitepress.dev/reference/default-theme-config
     nav: [
@@ -48,12 +50,18 @@ export default defineConfig({
       { icon: 'npm', link: 'https://www.npmjs.com/package/@xiangheng08/qrcode' },
     ],
   },
+  markdown: {
+    config(md) {
+      md.use(groupIconMdPlugin)
+    },
+  },
   vite: {
     resolve: {
       alias: {
         '@theme': join(__dirname, 'theme'),
       },
     },
+    plugins: [groupIconVitePlugin()],
   },
   vue: {
     template: {
