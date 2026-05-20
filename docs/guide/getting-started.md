@@ -75,6 +75,29 @@ const qrValue = ref('Hello Vue!')
 </script>
 ```
 
+::: info
+
+如果出现 "If this is a native custom element, make sure to exclude it from component resolution via compilerOptions.isCustomElement." 警告，这是因为 Vue 默认将非标准 HTML 标签当作组件处理。可以通过配置 `compilerOptions.isCustomElement` 选项，告诉 Vue 将特定标签视为原生自定义元素，从而跳过组件解析。
+
+```js [vite.config.js]
+import vue from '@vitejs/plugin-vue'
+
+export default {
+  plugins: [
+    vue({
+      template: {
+        compilerOptions: {
+          // 将以 xh- 开头的标签识别为自定义元素
+          isCustomElement: (tag) => tag.startsWith('xh-'),
+        }
+      }
+    })
+  ]
+}
+```
+
+:::
+
 ### React 示例
 
 ```jsx
